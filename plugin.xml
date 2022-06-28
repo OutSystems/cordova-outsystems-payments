@@ -6,15 +6,27 @@
   <js-module name="OSPayments" src="www/OSPayments.js">
     <clobbers target="cordova.plugins.OSPayments"/>
   </js-module>
+
+
   <platform name="android">
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="OSPayments">
         <param name="android-package" value="com.outsystems.payments.OSPayments"/>
       </feature>
+
+      <preference name="GradlePluginKotlinEnabled" value="true" />
+      <preference name="GradlePluginKotlinCodeStyle" value="official" />
+      <preference name="AndroidXEnabled" value="true"/>
+
     </config-file>
+
+    
     <config-file parent="/*" target="AndroidManifest.xml"/>
-    <source-file src="src/android/com/outsystems/payments/OSPayments.java" target-dir="src/com/outsystems/payments"/>
+    <source-file src="src/android/com/outsystems/payments/OSPayments.kt" target-dir="src/com/outsystems/payments"/>
+    <resource-file src="src/android/lib/OSCordova-Android.aar" target="libs/OSCordova-Android.aar" />
   </platform>
+
+
   <platform name="ios">
     <config-file parent="/*" target="config.xml">
       <feature name="OSPayments">

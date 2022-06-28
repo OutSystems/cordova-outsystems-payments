@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.+'
+        classpath 'com.google.gms:google-services:4.3.+'
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+repositories{
+    jcenter()
+    flatDir {
+        dirs 'src/main/libs'
+    }
+}
+
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation (name:'OSCordova-Android', ext:'aar')
+    implementation 'com.github.OutSystems.os-plugins-base-interface:oscore-android:core-0.0.5@aar'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
+}
+// use postBuildExtras to make sure the plugin is applied after
+// cdvPluginPostBuildExtras. Therefore if googleServices is added
+// to cdvPluginPostBuildExtras somewhere else, the plugin execution
+// will be skipped and project build will be successfull
+ext.postBuildExtras = {
+    if (project.extensions.findByName('googleServices') == null) {
+        // apply plugin: 'com.google.gms.google-services'
+        // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
+        apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+        googleServices.disableVersionCheck = true
+    }
+}
