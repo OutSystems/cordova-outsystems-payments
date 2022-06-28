@@ -2,6 +2,7 @@ package com.outsystems.payments
 
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
+import org.json.JSONArray
 
 class OSPayments : CordovaImplementation() {
 
@@ -21,6 +22,17 @@ class OSPayments : CordovaImplementation() {
         } else {
             callbackContext.error("Expected one non-empty string argument.")
         }
+    }
+
+    override fun onRequestPermissionResult(requestCode: Int,
+                                           permissions: Array<String>,
+                                           grantResults: IntArray) {
+        // Does nothing. These permissions are not required on Android.
+    }
+
+    override fun areGooglePlayServicesAvailable(): Boolean {
+        // Not used in this project.
+        return false
     }
 
 }
