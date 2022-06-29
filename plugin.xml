@@ -16,12 +16,54 @@
     <source-file src="src/android/com/outsystems/payments/OSPayments.java" target-dir="src/com/outsystems/payments"/>
   </platform>
   <platform name="ios">
+    <!-- Hooks -->
+    <hook type="before_plugin_install" src="hooks/ios/install_prerequisites.js"/>
+    
+    <dependency id="cordova-plugin-add-swift-support" url="https://github.com/OutSystems/cordova-plugin-add-swift-support.git#2.0.3-OS1"/>
+
     <config-file parent="/*" target="config.xml">
       <feature name="OSPayments">
         <param name="ios-package" value="OSPayments"/>
       </feature>
+      <preference name="deployment-target" value="13" />
+      <preference name="UseSwiftLanguageVersion" value="5" />
     </config-file>
-    <source-file src="src/ios/OSPayments.m"/>
-    <header-file src="src/ios/OSPayments.h"/>
+
+    <config-file target="*-Debug.plist" parent="com.apple.developer.in-app-payments">
+      <array>
+        <string>merchant.com.outsystems.rd.payments.payments</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Release.plist" parent="com.apple.developer.in-app-payments">
+      <array>
+        <string>merchant.com.outsystems.rd.payments.payments</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantID">
+         <string>merchant.com.outsystems.rd.payments.payments</string>
+    </config-file>
+
+    <!-- iOS Source Files -->
+    <source-file src="src/ios/Extensions/ApplePayExtensions.swift" />
+    
+    <source-file src="src/ios/Models/PaymentsBilling.swift" />
+    <source-file src="src/ios/Models/PaymentsMerchant.swift" />
+    <source-file src="src/ios/Models/PaymentsShipping.swift" />
+    <source-file src="src/ios/Models/PaymentsTotal.swift" />
+
+    <source-file src="src/ios/Protocols/PaymentsCallbackProtocol.swift" />
+    <source-file src="src/ios/Protocols/PaymentsHandlerProtocol.swift" />
+
+    <source-file src="src/ios/Utils/PaymentsError.swift" />
+
+    <source-file src="src/ios/ApplePayHandler.swift" />
+    <source-file src="src/ios/PaymentsController.swift" />
+
+    <source-file src="src/ios/OSPayments.swift"/>
+    <framework src="src/ios/frameworks/OSCore.xcframework" embed="true" custom="true" />
+
+
   </platform>
 </plugin>
