@@ -13,6 +13,8 @@ buildscript {
 allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
+        google()
+        mavenCentral()
     }
 }
 
@@ -28,6 +30,8 @@ apply plugin: 'kotlin-kapt'
 dependencies {
     implementation (name:'OSCordova-Android', ext:'aar')
     implementation 'com.github.OutSystems.os-plugins-base-interface:oscore-android:core-0.0.5@aar'
+
+    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
