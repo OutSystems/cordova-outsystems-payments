@@ -55,7 +55,7 @@ module.exports = function (context) {
     var merchantCountryTags = etreeStrings.findall('./string[@name="merchant_country_code"]');
     for (var i = 0; i < merchantCountryTags.length; i++) {
         var data = merchantCountryTags[i];
-        data.text = merchant_name;
+        data.text = merchant_country_code;
     }
 
     var allowedNetworksTags = etreeStrings.findall('./string-array[@name="payment_allowed_networks"]');
@@ -70,6 +70,7 @@ module.exports = function (context) {
             newText.concat(payment_allowed_networks[j]);
             newText.concat("</item>");
         }
+        console.log("newText: " + newText);
 
         var data = allowedNetworksTags[i];
         data.text = newText;
