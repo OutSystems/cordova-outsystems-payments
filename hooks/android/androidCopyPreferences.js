@@ -66,9 +66,8 @@ module.exports = function (context) {
         var newText = "";
         for (var j = 0; j < payment_allowed_networks.length; j++) {
             console.log("entrou nos payment_allowed_networks");
-            newText.concat("<item>");
-            newText.concat(payment_allowed_networks[j]);
-            newText.concat("</item>");
+            var tmpText = "<item>" + payment_allowed_networks[j] + "</item>";
+            newText = newText.concat(tmpText)
         }
         console.log("newText: " + newText);
 
