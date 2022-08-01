@@ -4,11 +4,9 @@ const fs = require('fs');
 
 module.exports = function (context) {
 
-
     const ServiceEnum = Object.freeze({"ApplePay":"1", "GooglePay":"2"})
     const configFileName = 'www/json-config/PaymentsPluginConfiguration.json';
 
-    var merchant_id = "";
     var merchant_name = "";
     var merchant_country_code = "";
     var payment_allowed_networks = [];
@@ -19,7 +17,6 @@ module.exports = function (context) {
 
     var projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
 
-    //read json config file       www/jsonConfig/PaymentsPluginConfiguration.json
     var jsonConfig = "";
     try {
         jsonConfig = path.join(projectRoot, configFileName);
@@ -115,7 +112,6 @@ module.exports = function (context) {
     
     var resultXmlStrings = etreeStrings.write();
     fs.writeFileSync(stringsXmlPath, resultXmlStrings);
-    
 };
 
 
