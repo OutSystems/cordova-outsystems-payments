@@ -61,8 +61,11 @@ module.exports = function (context) {
     var allowedNetworksTags = etreeStrings.findall('./string-array[@name="payment_allowed_networks"]');
     for (var i = 0; i < allowedNetworksTags.length; i++) {
 
+        console.log("entrou nas allowed networks");
+
         var newText = "";
         for (var j = 0; j < payment_allowed_networks.length; j++) {
+            console.log("entrou nos payment_allowed_networks");
             newText.concat("<item>");
             newText.concat(payment_allowed_networks[j]);
             newText.concat("</item>");
