@@ -6,15 +6,38 @@
   <js-module name="OSPayments" src="www/OSPayments.js">
     <clobbers target="cordova.plugins.OSPayments"/>
   </js-module>
+
   <platform name="android">
+
+    <hook type="after_prepare" src="hooks/android/androidCopyPreferences.js" />
+
     <config-file parent="/*" target="res/xml/config.xml">
       <feature name="OSPayments">
         <param name="android-package" value="com.outsystems.payments.OSPayments"/>
       </feature>
+      <preference name="GradlePluginKotlinEnabled" value="true" />
+      <preference name="GradlePluginKotlinCodeStyle" value="official" />
+      <preference name="AndroidXEnabled" value="true"/>
     </config-file>
-    <config-file parent="/*" target="AndroidManifest.xml"/>
+
+    <config-file parent="/manifest/application" target="AndroidManifest.xml">
+      <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true" />
+    </config-file>
+
+    <config-file parent="/resources" target="res/values/strings.xml">
+      <string name="merchant_name">MERCHANT_NAME</string>
+      <string name="merchant_country_code">MERCHANT_COUNTRY_CODE</string>
+      <string-array name="payment_allowed_networks">ALLOWED_NETWORKS</string-array>
+      <string-array name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string-array>
+      <string-array name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string-array>
+      <string-array name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string-array>
+      <string-array name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string-array>
+    </config-file>
+
     <source-file src="src/android/com/outsystems/payments/OSPayments.java" target-dir="src/com/outsystems/payments"/>
+
   </platform>
+
   <platform name="ios">
     <config-file parent="/*" target="config.xml">
       <feature name="OSPayments">
@@ -24,4 +47,5 @@
     <source-file src="src/ios/OSPayments.m"/>
     <header-file src="src/ios/OSPayments.h"/>
   </platform>
+
 </plugin>
