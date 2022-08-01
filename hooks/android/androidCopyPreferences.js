@@ -46,20 +46,21 @@ module.exports = function (context) {
     var stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
     var etreeStrings = et.parse(stringsXmlContents);
 
+    /*
     var stringTags = etreeStrings.findall('./string');
     for (var i = 0; i < stringTags.length; i++) {
         if(stringTags[i].text.includes("MERCHANT_NAME")){
             stringTags[i].text = stringTags[i].text.replace("MERCHANT_NAME", merchant_name)
         }
     }
+    */
 
-    /*
+    
     var stringTagsSecond = etreeStrings.findall('./string[@name="merchant_name"]');
     for (var i = 0; i < stringTagsSecond.length; i++) {
         var data = stringTagsSecond[i];
         data.text = merchant_name;
     }
-    */
     
     var resultXmlStrings = etreeStrings.write();
     fs.writeFileSync(stringsXmlPath, resultXmlStrings);
