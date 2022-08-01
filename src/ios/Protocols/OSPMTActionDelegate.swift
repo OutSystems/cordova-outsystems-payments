@@ -1,0 +1,3 @@
+protocol OSPMTActionDelegate {
+    func setupConfiguration()
+}

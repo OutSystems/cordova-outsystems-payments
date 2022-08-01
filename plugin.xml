@@ -16,12 +16,76 @@
     <source-file src="src/android/com/outsystems/payments/OSPayments.java" target-dir="src/com/outsystems/payments"/>
   </platform>
   <platform name="ios">
+    <!-- Hooks -->
+    <hook type="after_prepare" src="hooks/ios/iOSCopyPreferences.js" />
+
+    <dependency id="cordova-plugin-add-swift-support" url="https://github.com/OutSystems/cordova-plugin-add-swift-support.git#2.0.3-OS1"/>
+
     <config-file parent="/*" target="config.xml">
       <feature name="OSPayments">
         <param name="ios-package" value="OSPayments"/>
       </feature>
+      <preference name="deployment-target" value="13" />
+      <preference name="UseSwiftLanguageVersion" value="5" />
     </config-file>
-    <source-file src="src/ios/OSPayments.m"/>
-    <header-file src="src/ios/OSPayments.h"/>
+
+    <config-file target="*-Debug.plist" parent="com.apple.developer.in-app-payments">
+      <array>
+        <string>APPLE_PAY_MERCHANT_ID</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Release.plist" parent="com.apple.developer.in-app-payments">
+      <array>
+        <string>APPLE_PAY_MERCHANT_ID</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantID">
+         <string>APPLE_PAY_MERCHANT_ID</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantName">
+         <string>APPLE_PAY_MERCHANT_NAME</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantCountryCode">
+         <string>APPLE_PAY_MERCHANT_COUNTRY_CODE</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentAllowedNetworks">
+         <string>APPLE_PAY_PAYMENT_ALLOWED_NETWORKS</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentSupportedCapabilities">
+         <string>APPLE_PAY_PAYMENT_SUPPORTED_CAPABILITIES</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentSupportedCardCountries">
+         <string>APPLE_PAY_PAYMENT_SUPPORTED_CARD_COUNTRIES</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayShippingSupportedContacts">
+         <string>APPLE_PAY_SHIPPING_SUPPORTED_CONTACTS</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayBillingSupportedContacts">
+         <string>APPLE_PAY_BILLING_SUPPORTED_CONTACTS</string>
+    </config-file>
+
+    <!-- iOS Source Files -->
+    <source-file src="src/ios/Error/OSPMTError.swift" />
+
+    <source-file src="src/ios/Protocols/OSPMTActionDelegate.swift" />
+    <source-file src="src/ios/Protocols/OSPMTCallbackDelegate.swift" />
+    <source-file src="src/ios/Protocols/OSPMTConfigurationDelegate.swift" />
+    <source-file src="src/ios/Protocols/OSPMTHandlerDelegate.swift" />
+
+    <source-file src="src/ios/OSPMTApplePayHandler.swift" />
+    <source-file src="src/ios/OSPMTPayments.swift" />
+
+    <source-file src="src/ios/OSPayments.swift"/>
+    <framework src="src/ios/frameworks/OSCore.xcframework" embed="true" custom="true" />
+
   </platform>
 </plugin>

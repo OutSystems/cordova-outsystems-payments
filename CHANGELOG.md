@@ -7,3 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
+
+### 2022-08-01
+
+- Feat: Setup Apple Pay Configurations (https://outsystemsrd.atlassian.net/browse/RMET-1722).
