@@ -46,20 +46,30 @@ module.exports = function (context) {
     var stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
     var etreeStrings = et.parse(stringsXmlContents);
 
-    /*
-    var stringTags = etreeStrings.findall('./string');
-    for (var i = 0; i < stringTags.length; i++) {
-        if(stringTags[i].text.includes("MERCHANT_NAME")){
-            stringTags[i].text = stringTags[i].text.replace("MERCHANT_NAME", merchant_name)
-        }
-    }
-    */
-
-    
-    var stringTagsSecond = etreeStrings.findall('./string[@name="merchant_name"]');
-    for (var i = 0; i < stringTagsSecond.length; i++) {
-        var data = stringTagsSecond[i];
+    var merchantNameTags = etreeStrings.findall('./string[@name="merchant_name"]');
+    for (var i = 0; i < merchantNameTags.length; i++) {
+        var data = merchantNameTags[i];
         data.text = merchant_name;
+    }
+
+    var merchantCountryTags = etreeStrings.findall('./string[@name="merchant_country_code"]');
+    for (var i = 0; i < merchantCountryTags.length; i++) {
+        var data = merchantCountryTags[i];
+        data.text = merchant_name;
+    }
+
+    var allowedNetworksTags = etreeStrings.findall('./string-array[@name="payment_allowed_networks"]');
+    for (var i = 0; i < allowedNetworksTags.length; i++) {
+
+        var newText = "";
+        for (var j = 0; j < payment_allowed_networks.length; j++) {
+            newText.concat("<item>");
+            newText.concat(payment_allowed_networks[j]);
+            newText.concat("</item>");
+        }
+
+        var data = allowedNetworksTags[i];
+        data.text = newText;
     }
     
     var resultXmlStrings = etreeStrings.write();
