@@ -65,7 +65,7 @@ module.exports = function (context) {
         for (var i = 0; i < allowedNetworksTags.length; i++) {
             var newText = "";
             for (var j = 0; j < payment_allowed_networks.length; j++) {
-                var tmpText = "\<item\\\>" + payment_allowed_networks[j] + "\<\/item\>";
+                var tmpText = "\<item\\>" + payment_allowed_networks[j] + "\<\/item\>";
                 newText = newText.concat(tmpText)
             }
             var data = allowedNetworksTags[i];
