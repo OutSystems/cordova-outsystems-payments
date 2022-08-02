@@ -14,6 +14,8 @@ module.exports = function (context) {
     var payment_supported_card_countries = [];
     var shipping_supported_contacts = [];
     var billing_supported_contacts = [];
+    var tokenizaztion = "";
+
 
     var projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
 
@@ -32,12 +34,15 @@ module.exports = function (context) {
                 payment_supported_card_countries = configItem.payment_supported_card_countries;
                 shipping_supported_contacts = configItem.shipping_supported_contacts;
                 billing_supported_contacts = configItem.billing_supported_contacts;
+                tokenizaztion = configItem.tokenization;
             }
         });
 
     } catch {
         throw new Error("Missing configuration file or error trying to obtain the configuration.");
     }
+
+    console.log("tokenization: " + tokenizaztion);
 
     var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
     var stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
