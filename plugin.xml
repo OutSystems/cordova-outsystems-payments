@@ -28,10 +28,10 @@
       <string name="merchant_name">MERCHANT_NAME</string>
       <string name="merchant_country_code">MERCHANT_COUNTRY_CODE</string>
       <string name="payment_allowed_networks">ALLOWED_NETWORKS</string>
-      <string-array name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string-array>
-      <string-array name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string-array>
-      <string-array name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string-array>
-      <string-array name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string-array>
+      <string name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string>
+      <string name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string>
+      <string name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string>
+      <string name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string>
       <string name="tokenization">TOKENIZATION</string>
     </config-file>
 

@@ -67,48 +67,28 @@ module.exports = function (context) {
             data.text = payment_allowed_networks;
         }
 
-        var supportedCapabilitiesTags = etreeStrings.findall('./string-array[@name="payment_supported_capabilities"]');
+        var supportedCapabilitiesTags = etreeStrings.findall('./string[@name="payment_supported_capabilities"]');
         for (var i = 0; i < supportedCapabilitiesTags.length; i++) {
-            var newText = "";
-            for (var j = 0; j < payment_supported_capabilities.length; j++) {
-                var tmpText = "<item>" + payment_supported_capabilities[j] + "</item>";
-                newText = newText.concat(tmpText)
-            }
             var data = supportedCapabilitiesTags[i];
-            data.text = newText;
+            data.text = payment_supported_capabilities;
         }
 
-        var supportedCardCountriesTags = etreeStrings.findall('./string-array[@name="payment_supported_card_countries"]');
+        var supportedCardCountriesTags = etreeStrings.findall('./string[@name="payment_supported_card_countries"]');
         for (var i = 0; i < supportedCardCountriesTags.length; i++) {
-            var newText = "";
-            for (var j = 0; j < payment_supported_card_countries.length; j++) {
-                var tmpText = "<item>" + payment_supported_card_countries[j] + "</item>";
-                newText = newText.concat(tmpText)
-            }
             var data = supportedCardCountriesTags[i];
-            data.text = newText;
+            data.text = payment_supported_card_countries;
         }
 
-        var shippingContactsTags = etreeStrings.findall('./string-array[@name="shipping_supported_contacts"]');
+        var shippingContactsTags = etreeStrings.findall('./string[@name="shipping_supported_contacts"]');
         for (var i = 0; i < shippingContactsTags.length; i++) {
-            var newText = "";
-            for (var j = 0; j < shipping_supported_contacts.length; j++) {
-                var tmpText = "<item>" + shipping_supported_contacts[j] + "</item>";
-                newText = newText.concat(tmpText)
-            }
             var data = shippingContactsTags[i];
-            data.text = newText;
+            data.text = shipping_supported_contacts;
         }
 
-        var billingContactsTags = etreeStrings.findall('./string-array[@name="billing_supported_contacts"]');
+        var billingContactsTags = etreeStrings.findall('./string[@name="billing_supported_contacts"]');
         for (var i = 0; i < billingContactsTags.length; i++) {
-            var newText = "";
-            for (var j = 0; j < billing_supported_contacts.length; j++) {
-                var tmpText = "\<item\\\>" + billing_supported_contacts[j] + "\<\/item\>";
-                newText = newText.concat(tmpText)
-            }
             var data = billingContactsTags[i];
-            data.text = newText;
+            data.text = billing_supported_contacts;
         }
 
         var tokenizationTags = etreeStrings.findall('./string[@name="tokenization"]');
