@@ -15,6 +15,13 @@ class OSPayments: CDVPlugin {
 
         self.plugin?.setupConfiguration()
     }
+
+    @objc(checkWalletSetup:)
+    func checkWalletSetup(command: CDVInvokedUrlCommand) {
+        self.callbackId = command.callbackId
+
+        self.plugin?.checkWalletSetup()
+    }
 }
 
 // MARK: - OSCore's PlatformProtocol Methods

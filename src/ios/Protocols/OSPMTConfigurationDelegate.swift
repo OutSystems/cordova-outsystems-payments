@@ -1,6 +1,8 @@
+import PassKit
+
 typealias OSPMTConfiguration = [String: Any]
 
-protocol OSPMTConfigurationDelegate: CustomStringConvertible {
+protocol OSPMTConfigurationDelegate: AnyObject, CustomStringConvertible {
     var source: OSPMTConfiguration { get set }
     
     // MARK: Merchant Information
@@ -35,7 +37,7 @@ extension OSPMTConfigurationDelegate {
 }
 
 /// `ÒSPMTConfigurationProtocol` implemention for Apple Pay
-struct OSPMTApplePayConfiguration: OSPMTConfigurationDelegate {
+class OSPMTApplePayConfiguration: OSPMTConfigurationDelegate {
     struct ConfigurationKeys {
         static let merchantID = "ApplePayMerchantID"
         static let merchantName = "ApplePayMerchantName"
@@ -51,6 +53,10 @@ struct OSPMTApplePayConfiguration: OSPMTConfigurationDelegate {
     }
     
     var source: OSPMTConfiguration
+    
+    init(source: OSPMTConfiguration) {
+        self.source = source
+    }
     
     // MARK: Merchant Information
     var merchantID: String? {
@@ -112,8 +118,31 @@ struct OSPMTApplePayConfiguration: OSPMTConfigurationDelegate {
             configurationDict[ConfigurationKeys.billingSupportedContacts] = billingSupportedContacts
         }
         
-        guard let data = try? JSONSerialization.data(withJSONObject: configurationDict), let result = String(data: data, encoding: .utf8) else { return "" }
+        guard let data = try? JSONSerialization.data(withJSONObject: configurationDict), let result = String(data: data, encoding: .utf8)
+        else { return "" }
         return result
     }
 }
 
+extension OSPMTApplePayConfiguration {
+    var supportedNetworks: [PKPaymentNetwork]? {
+        guard let paymentAllowedNetworks = self.paymentAllowedNetworks else { return nil }
+        let result = paymentAllowedNetworks.compactMap(PKPaymentNetwork.convert(from:))
+        
+        return !result.isEmpty ? result : nil
+    }
+    
+    var merchantCapabilities: PKMerchantCapability? {
+        guard let paymentSupportedCapabilities = self.paymentSupportedCapabilities else { return nil }
+        
+        var result: PKMerchantCapability = []
+        result = paymentSupportedCapabilities.reduce(into: result) { partialResult, capability in
+            let merchantCapability = PKMerchantCapability.convert(from: capability)
+            if let merchantCapability = merchantCapability {
+                partialResult.insert(merchantCapability)
+            }
+        }
+        
+        return !result.isEmpty ? result : nil
+    }
+}
