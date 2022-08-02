@@ -42,7 +42,7 @@ module.exports = function (context) {
         throw new Error("Missing configuration file or error trying to obtain the configuration.");
     }
 
-    console.log("tokenization: " + tokenizaztion);
+    console.log("tokenization: " + JSON.stringify(tokenizaztion));
 
     var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
     var stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
