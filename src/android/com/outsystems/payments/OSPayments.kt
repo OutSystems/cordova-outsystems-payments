@@ -26,7 +26,7 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun setupConfiguration(message: String?, callbackContext: CallbackContext) {
-        paymentsController.requestPayment(getActivity())
+        //get configuration data to return
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
