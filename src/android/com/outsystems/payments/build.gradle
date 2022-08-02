@@ -1,0 +1,41 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.+'
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+        google()
+        mavenCentral()
+    }
+}
+
+repositories{
+    jcenter()
+    flatDir {
+        dirs 'src/main/libs'
+    }
+}
+
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation (name:'OSCordova-Android', ext:'aar')
+    implementation 'com.github.OutSystems.os-plugins-base-interface:oscore-android:core-0.0.5@aar'
+
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation "com.google.android.gms:play-services-wallet:19.1.0"
+    implementation "com.google.android.gms:play-services-pay:16.0.3"
+    implementation "androidx.activity:activity-ktx:1.4.0"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
+}
