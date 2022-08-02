@@ -14,7 +14,7 @@ module.exports = function (context) {
     var payment_supported_card_countries = [];
     var shipping_supported_contacts = [];
     var billing_supported_contacts = [];
-    var tokenizaztion = "";
+    var tokenization = "";
     var hasGooglePay = false;
 
 
@@ -36,7 +36,7 @@ module.exports = function (context) {
                 payment_supported_card_countries = configItem.payment_supported_card_countries;
                 shipping_supported_contacts = configItem.shipping_supported_contacts;
                 billing_supported_contacts = configItem.billing_supported_contacts;
-                tokenizaztion = JSON.stringify(configItem.tokenization);
+                tokenization = JSON.stringify(configItem.tokenization);
             }
         });
 
