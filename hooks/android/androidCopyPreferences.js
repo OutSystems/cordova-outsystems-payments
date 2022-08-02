@@ -15,6 +15,7 @@ module.exports = function (context) {
     var shipping_supported_contacts = [];
     var billing_supported_contacts = [];
     var tokenizaztion = "";
+    var hasGooglePay = false;
 
 
     var projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
@@ -27,6 +28,7 @@ module.exports = function (context) {
 
         jsonParsed.app_configurations.forEach(function(configItem) {
             if (configItem.service_id == ServiceEnum.GooglePay) {
+                hasGooglePay = true; 
                 merchant_name = configItem.merchant_name;
                 merchant_country_code = configItem.merchant_country_code;
                 payment_allowed_networks = configItem.payment_allowed_networks;
@@ -34,7 +36,7 @@ module.exports = function (context) {
                 payment_supported_card_countries = configItem.payment_supported_card_countries;
                 shipping_supported_contacts = configItem.shipping_supported_contacts;
                 billing_supported_contacts = configItem.billing_supported_contacts;
-                tokenizaztion = configItem.tokenization;
+                tokenizaztion = JSON.stringify(configItem.tokenization);
             }
         });
 
@@ -42,81 +44,87 @@ module.exports = function (context) {
         throw new Error("Missing configuration file or error trying to obtain the configuration.");
     }
 
-    console.log("tokenization: " + JSON.stringify(tokenizaztion));
+    if(hasGooglePay){
+        var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
+        var stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
+        var etreeStrings = et.parse(stringsXmlContents);
 
-    var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
-    var stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
-    var etreeStrings = et.parse(stringsXmlContents);
-
-    var merchantNameTags = etreeStrings.findall('./string[@name="merchant_name"]');
-    for (var i = 0; i < merchantNameTags.length; i++) {
-        var data = merchantNameTags[i];
-        data.text = merchant_name;
-    }
-
-    var merchantCountryTags = etreeStrings.findall('./string[@name="merchant_country_code"]');
-    for (var i = 0; i < merchantCountryTags.length; i++) {
-        var data = merchantCountryTags[i];
-        data.text = merchant_country_code;
-    }
-
-    var allowedNetworksTags = etreeStrings.findall('./string-array[@name="payment_allowed_networks"]');
-    for (var i = 0; i < allowedNetworksTags.length; i++) {
-        var newText = "";
-        for (var j = 0; j < payment_allowed_networks.length; j++) {
-            var tmpText = "<item>" + payment_allowed_networks[j] + "</item>";
-            newText = newText.concat(tmpText)
+        var merchantNameTags = etreeStrings.findall('./string[@name="merchant_name"]');
+        for (var i = 0; i < merchantNameTags.length; i++) {
+            var data = merchantNameTags[i];
+            data.text = merchant_name;
         }
-        var data = allowedNetworksTags[i];
-        data.text = newText;
-    }
 
-    var supportedCapabilitiesTags = etreeStrings.findall('./string-array[@name="payment_supported_capabilities"]');
-    for (var i = 0; i < supportedCapabilitiesTags.length; i++) {
-        var newText = "";
-        for (var j = 0; j < payment_supported_capabilities.length; j++) {
-            var tmpText = "<item>" + payment_supported_capabilities[j] + "</item>";
-            newText = newText.concat(tmpText)
+        var merchantCountryTags = etreeStrings.findall('./string[@name="merchant_country_code"]');
+        for (var i = 0; i < merchantCountryTags.length; i++) {
+            var data = merchantCountryTags[i];
+            data.text = merchant_country_code;
         }
-        var data = supportedCapabilitiesTags[i];
-        data.text = newText;
-    }
 
-    var supportedCardCountriesTags = etreeStrings.findall('./string-array[@name="payment_supported_card_countries"]');
-    for (var i = 0; i < supportedCardCountriesTags.length; i++) {
-        var newText = "";
-        for (var j = 0; j < payment_supported_card_countries.length; j++) {
-            var tmpText = "<item>" + payment_supported_card_countries[j] + "</item>";
-            newText = newText.concat(tmpText)
+        var allowedNetworksTags = etreeStrings.findall('./string-array[@name="payment_allowed_networks"]');
+        for (var i = 0; i < allowedNetworksTags.length; i++) {
+            var newText = "";
+            for (var j = 0; j < payment_allowed_networks.length; j++) {
+                var tmpText = "<item>" + payment_allowed_networks[j] + "</item>";
+                newText = newText.concat(tmpText)
+            }
+            var data = allowedNetworksTags[i];
+            data.text = newText;
         }
-        var data = supportedCardCountriesTags[i];
-        data.text = newText;
-    }
 
-    var shippingContactsTags = etreeStrings.findall('./string-array[@name="shipping_supported_contacts"]');
-    for (var i = 0; i < shippingContactsTags.length; i++) {
-        var newText = "";
-        for (var j = 0; j < shipping_supported_contacts.length; j++) {
-            var tmpText = "<item>" + shipping_supported_contacts[j] + "</item>";
-            newText = newText.concat(tmpText)
+        var supportedCapabilitiesTags = etreeStrings.findall('./string-array[@name="payment_supported_capabilities"]');
+        for (var i = 0; i < supportedCapabilitiesTags.length; i++) {
+            var newText = "";
+            for (var j = 0; j < payment_supported_capabilities.length; j++) {
+                var tmpText = "<item>" + payment_supported_capabilities[j] + "</item>";
+                newText = newText.concat(tmpText)
+            }
+            var data = supportedCapabilitiesTags[i];
+            data.text = newText;
         }
-        var data = shippingContactsTags[i];
-        data.text = newText;
-    }
 
-    var billingContactsTags = etreeStrings.findall('./string-array[@name="billing_supported_contacts"]');
-    for (var i = 0; i < billingContactsTags.length; i++) {
-        var newText = "";
-        for (var j = 0; j < billing_supported_contacts.length; j++) {
-            var tmpText = "<item>" + billing_supported_contacts[j] + "</item>";
-            newText = newText.concat(tmpText)
+        var supportedCardCountriesTags = etreeStrings.findall('./string-array[@name="payment_supported_card_countries"]');
+        for (var i = 0; i < supportedCardCountriesTags.length; i++) {
+            var newText = "";
+            for (var j = 0; j < payment_supported_card_countries.length; j++) {
+                var tmpText = "<item>" + payment_supported_card_countries[j] + "</item>";
+                newText = newText.concat(tmpText)
+            }
+            var data = supportedCardCountriesTags[i];
+            data.text = newText;
         }
-        var data = billingContactsTags[i];
-        data.text = newText;
-    }
+
+        var shippingContactsTags = etreeStrings.findall('./string-array[@name="shipping_supported_contacts"]');
+        for (var i = 0; i < shippingContactsTags.length; i++) {
+            var newText = "";
+            for (var j = 0; j < shipping_supported_contacts.length; j++) {
+                var tmpText = "<item>" + shipping_supported_contacts[j] + "</item>";
+                newText = newText.concat(tmpText)
+            }
+            var data = shippingContactsTags[i];
+            data.text = newText;
+        }
+
+        var billingContactsTags = etreeStrings.findall('./string-array[@name="billing_supported_contacts"]');
+        for (var i = 0; i < billingContactsTags.length; i++) {
+            var newText = "";
+            for (var j = 0; j < billing_supported_contacts.length; j++) {
+                var tmpText = "<item>" + billing_supported_contacts[j] + "</item>";
+                newText = newText.concat(tmpText)
+            }
+            var data = billingContactsTags[i];
+            data.text = newText;
+        }
+
+        var tokenizationTags = etreeStrings.findall('./string[@name="tokenization"]');
+        for (var i = 0; i < tokenizationTags.length; i++) {
+            var data = tokenizationTags[i];
+            data.text = tokenization;
+        }
     
-    var resultXmlStrings = etreeStrings.write();
-    fs.writeFileSync(stringsXmlPath, resultXmlStrings);
+        var resultXmlStrings = etreeStrings.write();
+        fs.writeFileSync(stringsXmlPath, resultXmlStrings);
+    }
 };
 
 

@@ -32,6 +32,7 @@
       <string-array name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string-array>
       <string-array name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string-array>
       <string-array name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string-array>
+      <string name="tokenization">TOKENIZATION</string>
     </config-file>
 
     <source-file src="src/android/com/outsystems/payments/OSPayments.java" target-dir="src/com/outsystems/payments"/>
