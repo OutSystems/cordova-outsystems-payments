@@ -61,15 +61,10 @@ module.exports = function (context) {
             data.text = merchant_country_code;
         }
 
-        var allowedNetworksTags = etreeStrings.findall('./string-array[@name="payment_allowed_networks"]');
+        var allowedNetworksTags = etreeStrings.findall('./string[@name="payment_allowed_networks"]');
         for (var i = 0; i < allowedNetworksTags.length; i++) {
-            var newText = "";
-            for (var j = 0; j < payment_allowed_networks.length; j++) {
-                var tmpText = "\<item\\>" + payment_allowed_networks[j] + "\<\/item\>";
-                newText = newText.concat(tmpText)
-            }
             var data = allowedNetworksTags[i];
-            data.text = newText;
+            data.text = payment_allowed_networks;
         }
 
         var supportedCapabilitiesTags = etreeStrings.findall('./string-array[@name="payment_supported_capabilities"]');

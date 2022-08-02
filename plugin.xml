@@ -27,7 +27,7 @@
     <config-file parent="/resources" target="res/values/strings.xml">
       <string name="merchant_name">MERCHANT_NAME</string>
       <string name="merchant_country_code">MERCHANT_COUNTRY_CODE</string>
-      <string-array name="payment_allowed_networks">ALLOWED_NETWORKS</string-array>
+      <string name="payment_allowed_networks">ALLOWED_NETWORKS</string>
       <string-array name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string-array>
       <string-array name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string-array>
       <string-array name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string-array>
