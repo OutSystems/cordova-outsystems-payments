@@ -10,8 +10,7 @@ import org.json.JSONArray
 
 class OSPayments() : CordovaImplementation() {
 
-    //override var callbackContext: CallbackContext? = null
-
+    override var callbackContext: CallbackContext? = null
     private lateinit var paymentsController: PaymentsController
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
@@ -21,6 +20,7 @@ class OSPayments() : CordovaImplementation() {
 
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
+        this.callbackContext = callbackContext
         if (action == "setupConfiguration") {
             this.setupConfiguration(callbackContext)
             return true
@@ -30,7 +30,7 @@ class OSPayments() : CordovaImplementation() {
 
     private fun setupConfiguration(callbackContext: CallbackContext) {
         //get configuration data to return
-        sendPluginResult(paymentsController.setupConfiguration(getActivity()), null, callbackContext.callbackId)
+        sendPluginResult(paymentsController.setupConfiguration(getActivity()), null)
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
