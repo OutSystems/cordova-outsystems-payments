@@ -1,6 +1,5 @@
 package com.outsystems.payments
 
-import android.content.Intent
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.PaymentsController
