@@ -3,11 +3,14 @@ package com.outsystems.payments
 import android.content.Intent
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
+import com.outsystems.plugins.payments.PaymentsController
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
 
-class OSPayments : CordovaImplementation() {
+class OSPayments() : CordovaImplementation() {
+
+    //override var callbackContext: CallbackContext? = null
 
     private lateinit var paymentsController: PaymentsController
 
@@ -18,7 +21,6 @@ class OSPayments : CordovaImplementation() {
 
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
-        super.execute(action, args, callbackContext)
         if (action == "setupConfiguration") {
             this.setupConfiguration(callbackContext)
             return true
