@@ -18,6 +18,13 @@ repositories {
     }
 }
 
+repositories{
+    jcenter()
+    flatDir {
+        dirs 'src/main/libs'
+    }
+}
+
 
 apply plugin: 'kotlin-kapt'
 
