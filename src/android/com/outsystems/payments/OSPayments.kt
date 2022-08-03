@@ -12,6 +12,10 @@ class OSPayments : CordovaImplementation() {
     override var callbackContext: CallbackContext? = null
     private lateinit var paymentsController: PaymentsController
 
+    companion object {
+        private const val ERROR_FORMAT_PREFIX = "OS-PLUG-PMT-"
+    }
+
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
         super.initialize(cordova, webView)
         paymentsController = PaymentsController()
@@ -27,7 +31,13 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun setupConfiguration() {
-        sendPluginResult(paymentsController.setupConfiguration(getActivity()), null)
+        paymentsController.setupConfiguration(getActivity(),
+            {
+                sendPluginResult(it, null)
+            },
+            {
+                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+            })
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
@@ -39,5 +49,9 @@ class OSPayments : CordovaImplementation() {
     override fun areGooglePlayServicesAvailable(): Boolean {
         // Not used in this project.
         return false
+    }
+
+    private fun formatErrorCode(code: Int): String {
+        return ERROR_FORMAT_PREFIX + code.toString().padStart(4, '0')
     }
 }
