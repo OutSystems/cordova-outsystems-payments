@@ -10,26 +10,22 @@ buildscript {
     }
 }
 
-allprojects {
+repositories {
+    google()
+    mavenCentral()
     repositories {
-        maven { url 'https://jitpack.io' }
-        google()
-        mavenCentral()
+        maven { url 'https://pkgs.dev.azure.com/OutSystemsRD/9e79bc5b-69b2-4476-9ca5-d67594972a52/_packaging/PublicArtifactRepository/maven/v1' }
     }
 }
 
-repositories{
-    jcenter()
-    flatDir {
-        dirs 'src/main/libs'
-    }
-}
 
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation (name:'OSCordova-Android', ext:'aar')
-    implementation 'com.github.OutSystems.os-plugins-base-interface:oscore-android:core-0.0.5@aar'
+    implementation("com.github.outsystems:oscore-android:1.1.0@aar")
+    implementation("com.github.outsystems:oscordova-android:1.1.0@aar")
+
+    implementation (name:'OSPaymentsLib', ext:'aar')
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "com.google.android.gms:play-services-wallet:19.1.0"
