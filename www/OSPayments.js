@@ -7,3 +7,7 @@ exports.setupConfiguration = function(success, error) {
 exports.checkWalletSetup = function(success, error) {
     exec(success, error, 'OSPayments', 'checkWalletSetup');
 };
+
+exports.setDetails = function(paymentDetails, success, error) {
+    exec(success, error, 'OSPayments', 'setDetails', [paymentDetails]);
+}
