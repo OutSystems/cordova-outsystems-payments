@@ -1,6 +1,9 @@
 import PassKit
 
 extension PKPaymentNetwork {
+    /// Allows the conversion of the text associated to a Payment Network  into an object of `PKPaymentNetwork` type.
+    /// - Parameter text: Payment network text to convert.
+    /// - Returns: The equivalent `PKPaymentNetwork` object.
     static func convert(from text: String) -> PKPaymentNetwork? {
         switch text.lowercased() {
         case "amex":

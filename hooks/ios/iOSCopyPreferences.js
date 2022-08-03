@@ -1,6 +1,7 @@
 const et = require('elementtree');
 const path = require('path');
 const fs = require('fs');
+const plist = require('plist');
 const { ConfigParser } = require('cordova-common');
 const { Console } = require('console');
 
@@ -22,92 +23,95 @@ module.exports = function (context) {
     var appNameParser = new ConfigParser(appNamePath);
     var appName = appNameParser.name();
 
+    let platformPath = path.join(projectRoot, 'platforms/ios');
+
     //read json config file
     var jsonConfig = "";
     try {
-        jsonConfig = path.join(projectRoot, 'platforms/ios/www/json-config/PaymentsPluginConfiguration.json');
-        var jsonConfigFile = fs.readFileSync(jsonConfig).toString();
+        jsonConfig = path.join(platformPath, 'www/json-config/PaymentsPluginConfiguration.json');
+        var jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
         var jsonParsed = JSON.parse(jsonConfigFile);
-    
-        jsonParsed.app_configurations.forEach(function(configItem) {
-            if (configItem.service_id == ServiceEnum.ApplePay) {
-                merchant_id = configItem.merchant_id;
-                merchant_name = configItem.merchant_name;
-                merchant_country_code = configItem.merchant_country_code;
-                payment_allowed_networks = configItem.payment_allowed_networks;
-                payment_supported_capabilities = configItem.payment_supported_capabilities;
-                payment_supported_card_countries = configItem.payment_supported_card_countries;
-                shipping_supported_contacts = configItem.shipping_supported_contacts;
-                billing_supported_contacts = configItem.billing_supported_contacts;
-            }
-        });
     } catch {
         throw new Error("Missing configuration file or error trying to obtain the configuration.");
     }
+    
+    jsonParsed.app_configurations.forEach(function(configItem) {
+        if (configItem.service_id == ServiceEnum.ApplePay) {
+            var error_list = [];
+            
+            if (configItem.merchant_id != null && configItem.merchant_id !== "") {
+                merchant_id = configItem.merchant_id;
+            } else {
+                error_list.push('Merchant Id');
+            }
+
+            if (configItem.merchant_name != null && configItem.merchant_name !== "") {
+                merchant_name = configItem.merchant_name;
+            } else {
+                error_list.push('Merchant Name');
+            }
+
+            if (configItem.merchant_country_code != null && configItem.merchant_country_code !== "") {
+                merchant_country_code = configItem.merchant_country_code;
+            } else {
+                error_list.push('Merchant Country');
+            }
+
+            if (configItem.payment_allowed_networks != null && configItem.payment_allowed_networks.length > 0) {
+                payment_allowed_networks = configItem.payment_allowed_networks;
+            } else {
+                error_list.push('Payment Allowed Networks');
+            }
+
+            if (configItem.payment_supported_capabilities != null && configItem.payment_supported_capabilities.length > 0) {
+                payment_supported_capabilities = configItem.payment_supported_capabilities;
+            } else {
+                error_list.push('Payment Supported Capabilities');
+            }
+
+            shipping_supported_contacts = configItem.shipping_supported_contacts;
+            billing_supported_contacts = configItem.billing_supported_contacts;
+            payment_supported_card_countries = configItem.payment_supported_card_countries;                    
+        
+            if (error_list.length > 0) {
+                throw new Error("Configuration is missing the following fields: " + error_list);
+            }
+
+            return;
+        }
+    });
+    
 
     //Change info.plist
-    var infoPlistPath = path.join(projectRoot, 'platforms/ios/' + appName + '/'+ appName +'-info.plist');
-    var infoPlistFile = fs.readFileSync(infoPlistPath).toString();
-    var etreeInfoPlist = et.parse(infoPlistFile);
+    var infoPlistPath = path.join(platformPath, appName + '/'+ appName +'-info.plist');
+    var infoPlistFile = fs.readFileSync(infoPlistPath, 'utf8');
+    var infoPlist = plist.parse(infoPlistFile);
 
-    var infoPlistTags = etreeInfoPlist.findall('./dict/string');
+    infoPlist['ApplePayMerchantID'] = merchant_id;
+    infoPlist['ApplePayMerchantName'] = merchant_name;
+    infoPlist['ApplePayMerchantCountryCode'] = merchant_country_code;
+    infoPlist['ApplePayPaymentAllowedNetworks'] = payment_allowed_networks;
+    infoPlist['ApplePayPaymentSupportedCapabilities'] = payment_supported_capabilities;
+    infoPlist['ApplePayPaymentSupportedCardCountries'] = payment_supported_card_countries;
+    infoPlist['ApplePayShippingSupportedContacts'] = shipping_supported_contacts;
+    infoPlist['ApplePayBillingSupportedContacts'] = billing_supported_contacts;
 
-    for (var i = 0; i < infoPlistTags.length; i++) {
-        if (infoPlistTags[i].text.includes("APPLE_PAY_MERCHANT_ID")) {
-            infoPlistTags[i].text = merchant_id;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_MERCHANT_NAME")) {
-            infoPlistTags[i].text = merchant_name;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_MERCHANT_COUNTRY_CODE")) {
-            infoPlistTags[i].text = merchant_country_code;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_PAYMENT_ALLOWED_NETWORKS")) {
-            infoPlistTags[i].text = payment_allowed_networks;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_PAYMENT_SUPPORTED_CAPABILITIES")) {
-            infoPlistTags[i].text = payment_supported_capabilities;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_PAYMENT_SUPPORTED_CARD_COUNTRIES")) {
-            infoPlistTags[i].text = payment_supported_card_countries;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_SHIPPING_SUPPORTED_CONTACTS")) {
-            infoPlistTags[i].text = shipping_supported_contacts;
-        }
-        if (infoPlistTags[i].text.includes("APPLE_PAY_BILLING_SUPPORTED_CONTACTS")) {
-            infoPlistTags[i].text = billing_supported_contacts;
-        }
-    }
+    fs.writeFileSync(infoPlistPath, plist.build(infoPlist, { indent: '\t' }));
 
-    var resultXmlInfoPlist = etreeInfoPlist.write();
-    fs.writeFileSync(infoPlistPath, resultXmlInfoPlist);
+    // Change Entitlements files
+    var debugEntitlementsPath = path.join(platformPath, appName + '/'+ 'Entitlements-Debug.plist');
+    var debugEntitlementsFile = fs.readFileSync(debugEntitlementsPath, 'utf8');
+    var debugEntitlements = plist.parse(debugEntitlementsFile);
 
-    // Change Entitlements file
-    var debugEntitlementsPath = path.join(projectRoot, 'platforms/ios/' + appName + '/'+ 'Entitlements-Debug.plist');
-    var debugEntitlementsFile = fs.readFileSync(debugEntitlementsPath).toString();
-    var eTreeDebugEntitlements = et.parse(debugEntitlementsFile);
-    var debugEntitlementsTags = eTreeDebugEntitlements.findall('./dict/array/string');
+    debugEntitlements['com.apple.developer.in-app-payments'] = [merchant_id];
 
-    for (var i = 0; i < debugEntitlementsTags.length; i++) {
-        if (debugEntitlementsTags[i].text.includes("APPLE_PAY_MERCHANT_ID")) {
-            debugEntitlementsTags[i].text = merchant_id;
-        }
-    }
+    fs.writeFileSync(debugEntitlementsPath, plist.build(debugEntitlements, { indent: '\t' }));
 
-    var resultXmlDebugEntitlements = eTreeDebugEntitlements.write();
-    fs.writeFileSync(debugEntitlementsPath, resultXmlDebugEntitlements);
+    var releaseEntitlementsPath = path.join(platformPath, appName + '/' + 'Entitlements-Release.plist');
+    var releaseEntitlementsFile = fs.readFileSync(releaseEntitlementsPath, 'utf8');
+    var releaseEntitlements = plist.parse(releaseEntitlementsFile);
 
-    var releaseEntitlementsPath = path.join(projectRoot, 'platforms/ios/' + appName + '/' + 'Entitlements-Release.plist');
-    var releaseEntitlementsFile = fs.readFileSync(releaseEntitlementsPath).toString();
-    var eTreeReleaseEntitlements = et.parse(releaseEntitlementsFile);
-    var releaseEntitlementsTags = eTreeReleaseEntitlements.findall('./dict/array/string');
+    releaseEntitlements['com.apple.developer.in-app-payments'] = [merchant_id];
 
-    for (var i = 0; i < releaseEntitlementsTags.length; i++) {
-        if (releaseEntitlementsTags[i].text.includes("APPLE_PAY_MERCHANT_ID")) {
-            releaseEntitlementsTags[i].text = merchant_id;
-        }
-    }
-
-    var resultXmlReleaseEntitlements = eTreeReleaseEntitlements.write();
-    fs.writeFileSync(releaseEntitlementsPath, resultXmlReleaseEntitlements);
+    fs.writeFileSync(releaseEntitlementsPath, plist.build(releaseEntitlements, { indent: '\t' }));
 };

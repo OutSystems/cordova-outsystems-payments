@@ -13,6 +13,7 @@ The changes documented here do not include those from the original repository.
 
 ## 2022-08-03
 - Android - implementated setupConfiguration method for Android (https://outsystemsrd.atlassian.net/browse/RMET-1721)
+- Feat: Set Payment Details (https://outsystemsrd.atlassian.net/browse/RMET-1723).
 
 ### 2022-08-02
 - Feat: Check Wallet Availability for Payment (https://outsystemsrd.atlassian.net/browse/RMET-1695).

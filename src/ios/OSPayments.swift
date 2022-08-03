@@ -22,6 +22,14 @@ class OSPayments: CDVPlugin {
 
         self.plugin?.checkWalletSetup()
     }
+    
+    @objc(setDetails:)
+    func setDetails(command: CDVInvokedUrlCommand) {
+        self.callbackId = command.callbackId
+        
+        guard let detailsText = command.arguments.first as? String else { return }
+        self.plugin?.set(detailsText)
+    }
 }
 
 // MARK: - OSCore's PlatformProtocol Methods
@@ -30,7 +38,10 @@ extension OSPayments: PlatformProtocol {
         var pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR)
 
         if let error = error {
-            let errorDict: [String: Any] = ["code": error.code, "message": error.localizedDescription]
+            let errorDict = [
+                "code": "OS-PLUG-PMT-\(String(format: "%04d", error.code))",
+                "message": error.localizedDescription
+            ]
             pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: errorDict);
         } else if let result = result {
             pluginResult = result.isEmpty ? CDVPluginResult(status: CDVCommandStatus_OK) : CDVPluginResult(status: CDVCommandStatus_OK, messageAs: result)

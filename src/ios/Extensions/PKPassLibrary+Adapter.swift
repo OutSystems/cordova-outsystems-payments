@@ -1,10 +1,8 @@
 import PassKit
 
-protocol OSPMTWalletAvailabilityDelegate: AnyObject {
-    static func isWalletAvailable() -> Bool
-}
-
 extension PKPassLibrary: OSPMTWalletAvailabilityDelegate {
+    /// Verifies if the wallet is available for usage.
+    /// - Returns: A boolean indicating if the wallet is available.
     static func isWalletAvailable() -> Bool {
         Self.isPassLibraryAvailable()
     }
