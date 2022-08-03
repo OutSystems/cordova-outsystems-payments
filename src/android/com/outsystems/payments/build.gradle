@@ -29,8 +29,6 @@ repositories{
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    //implementation("com.github.outsystems:oscore-android:1.1.0@aar")
-    //implementation("com.github.outsystems:oscordova-android:1.1.0@aar")
     implementation 'com.github.OutSystems.os-plugins-base-interface:oscore-android:core-0.0.5@aar'
 
     implementation (name:'OSPaymentsLib', ext:'aar')

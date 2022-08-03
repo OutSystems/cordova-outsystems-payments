@@ -37,6 +37,7 @@
 
     <source-file src="src/android/com/outsystems/payments/OSPayments.kt" target-dir="app/src/main/kotlin/com/outsystems/payments"/>
     <resource-file src="src/android/lib/OSPaymentsLib.aar" target="libs/OSPaymentsLib.aar" />
+    <resource-file src="src/android/lib/OSCordova-Android.aar" target="libs/OSCordova-Android.aar" />
     <framework src="src/android/com/outsystems/payments/build.gradle" custom="true" type="gradleReference" />
 
   </platform>
