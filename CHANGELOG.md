@@ -8,5 +8,8 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+## 03-08-2022
+Android - implementated setupConfiguration method for Android (https://outsystemsrd.atlassian.net/browse/RMET-1721)
+
 ## 01-08-2022
 - Android - implemented hook to copy configuration data from JSON resource file. (https://outsystemsrd.atlassian.net/browse/RMET-1721)
