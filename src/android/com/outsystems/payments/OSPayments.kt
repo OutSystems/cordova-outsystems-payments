@@ -2,7 +2,9 @@ package com.outsystems.payments
 
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
+import com.outsystems.plugins.payments.GooglePayManager
 import com.outsystems.plugins.payments.PaymentsController
+import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
@@ -10,6 +12,7 @@ import org.json.JSONArray
 class OSPayments : CordovaImplementation() {
 
     override var callbackContext: CallbackContext? = null
+    private lateinit var googlePayManager: GooglePayManager
     private lateinit var paymentsController: PaymentsController
 
     companion object {
@@ -18,16 +21,25 @@ class OSPayments : CordovaImplementation() {
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
         super.initialize(cordova, webView)
-        paymentsController = PaymentsController()
+        googlePayManager = GooglePayManager(getActivity())
+        paymentsController = PaymentsController(googlePayManager)
     }
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
         this.callbackContext = callbackContext
-        if (action == "setupConfiguration") {
-            this.setupConfiguration()
-            return true
+        val result = runBlocking {
+            when (action) {
+                "setupConfiguration" -> {
+                    setupConfiguration()
+                }
+                "checkWalletSetup" -> {
+                    checkWalletSetup()
+                }
+                else -> false
+            }
+            true
         }
-        return false
+        return result
     }
 
     private fun setupConfiguration() {
@@ -37,7 +49,18 @@ class OSPayments : CordovaImplementation() {
             },
             {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
-            })
+            }
+        )
+    }
+
+    private fun checkWalletSetup(){
+        paymentsController.verifyIfWalletIsSetup(getActivity(),
+            {
+                sendPluginResult(it, null)
+            }, {
+                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+            }
+        )
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
