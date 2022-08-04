@@ -2,8 +2,8 @@ package com.outsystems.payments
 
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
-import com.outsystems.plugins.payments.GooglePayManager
-import com.outsystems.plugins.payments.PaymentsController
+import com.outsystems.plugins.payments.controller.GooglePayManager
+import com.outsystems.plugins.payments.controller.PaymentsController
 import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
