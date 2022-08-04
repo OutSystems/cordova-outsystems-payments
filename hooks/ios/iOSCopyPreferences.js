@@ -54,28 +54,28 @@ module.exports = function (context) {
 
     for (var i = 0; i < infoPlistTags.length; i++) {
         if (infoPlistTags[i].text.includes("APPLE_PAY_MERCHANT_ID")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_MERCHANT_ID', merchant_id);
+            infoPlistTags[i].text = merchant_id;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_MERCHANT_NAME")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_MERCHANT_NAME', merchant_name);
+            infoPlistTags[i].text = merchant_name;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_MERCHANT_COUNTRY_CODE")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_MERCHANT_COUNTRY_CODE', merchant_country_code);
+            infoPlistTags[i].text = merchant_country_code;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_PAYMENT_ALLOWED_NETWORKS")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_PAYMENT_ALLOWED_NETWORKS', payment_allowed_networks);
+            infoPlistTags[i].text = payment_allowed_networks;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_PAYMENT_SUPPORTED_CAPABILITIES")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_PAYMENT_SUPPORTED_CAPABILITIES', payment_supported_capabilities);
+            infoPlistTags[i].text = payment_supported_capabilities;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_PAYMENT_SUPPORTED_CARD_COUNTRIES")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_PAYMENT_SUPPORTED_CARD_COUNTRIES', payment_supported_card_countries);
+            infoPlistTags[i].text = payment_supported_card_countries;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_SHIPPING_SUPPORTED_CONTACTS")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_SHIPPING_SUPPORTED_CONTACTS', shipping_supported_contacts);
+            infoPlistTags[i].text = shipping_supported_contacts;
         }
         if (infoPlistTags[i].text.includes("APPLE_PAY_BILLING_SUPPORTED_CONTACTS")) {
-            infoPlistTags[i].text = infoPlistTags[i].text.replace('APPLE_PAY_BILLING_SUPPORTED_CONTACTS', billing_supported_contacts);
+            infoPlistTags[i].text = billing_supported_contacts;
         }
     }
 
@@ -90,7 +90,7 @@ module.exports = function (context) {
 
     for (var i = 0; i < debugEntitlementsTags.length; i++) {
         if (debugEntitlementsTags[i].text.includes("APPLE_PAY_MERCHANT_ID")) {
-            debugEntitlementsTags[i].text = debugEntitlementsTags[i].text.replace('APPLE_PAY_MERCHANT_ID', merchant_id);
+            debugEntitlementsTags[i].text = merchant_id;
         }
     }
 
@@ -104,7 +104,7 @@ module.exports = function (context) {
 
     for (var i = 0; i < releaseEntitlementsTags.length; i++) {
         if (releaseEntitlementsTags[i].text.includes("APPLE_PAY_MERCHANT_ID")) {
-            releaseEntitlementsTags[i].text = releaseEntitlementsTags[i].text.replace('APPLE_PAY_MERCHANT_ID', merchant_id);
+            releaseEntitlementsTags[i].text = merchant_id;
         }
     }
 
