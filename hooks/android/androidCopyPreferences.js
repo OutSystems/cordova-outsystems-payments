@@ -35,6 +35,7 @@ module.exports = function (context) {
                     configItem.payment_allowed_networks != null &&
                     configItem.payment_allowed_networks != "" &&
                     configItem.payment_supported_capabilities != null &&
+                    configItem.payment_supported_capabilities != "" &&
                     configItem.payment_supported_card_countries != null &&
                     configItem.shipping_supported_contacts != null &&
                     configItem.billing_supported_contacts != null &&
