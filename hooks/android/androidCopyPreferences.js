@@ -28,15 +28,28 @@ module.exports = function (context) {
 
         jsonParsed.app_configurations.forEach(function(configItem) {
             if (configItem.service_id == ServiceEnum.GooglePay) {
-                hasGooglePay = true; 
-                merchant_name = configItem.merchant_name;
-                merchant_country_code = configItem.merchant_country_code;
-                payment_allowed_networks = configItem.payment_allowed_networks;
-                payment_supported_capabilities = configItem.payment_supported_capabilities;
-                payment_supported_card_countries = configItem.payment_supported_card_countries;
-                shipping_supported_contacts = configItem.shipping_supported_contacts;
-                billing_supported_contacts = configItem.billing_supported_contacts;
-                tokenization = JSON.stringify(configItem.tokenization);
+                if(configItem.merchant_name != null && 
+                    configItem.merchant_country_code != null && 
+                    configItem.payment_allowed_networks != null &&
+                    configItem.payment_supported_capabilities != null &&
+                    configItem.payment_supported_card_countries != null &&
+                    configItem.shipping_supported_contacts != null &&
+                    configItem.billing_supported_contacts != null &&
+                    configItem.tokenization != null)
+                {
+                    hasGooglePay = true;
+                    merchant_name = configItem.merchant_name;
+                    merchant_country_code = configItem.merchant_country_code;
+                    payment_allowed_networks = configItem.payment_allowed_networks;
+                    payment_supported_capabilities = configItem.payment_supported_capabilities;
+                    payment_supported_card_countries = configItem.payment_supported_card_countries;
+                    shipping_supported_contacts = configItem.shipping_supported_contacts;
+                    billing_supported_contacts = configItem.billing_supported_contacts;
+                    tokenization = JSON.stringify(configItem.tokenization);
+                }
+                else{
+                    throw new Error("Missing configuration file or error trying to obtain the configuration.");
+                }
             }
         });
 
@@ -93,5 +106,3 @@ module.exports = function (context) {
         fs.writeFileSync(stringsXmlPath, resultXmlStrings);
     }
 };
-
-
