@@ -28,18 +28,18 @@ module.exports = function (context) {
 
         jsonParsed.app_configurations.forEach(function(configItem) {
             if (configItem.service_id == ServiceEnum.GooglePay) {
-                if(configItem.merchant_name != null && 
-                    configItem.merchant_name != "" &&
-                    configItem.merchant_country_code != null && 
-                    configItem.merchant_country_code != "" && 
-                    configItem.payment_allowed_networks != null &&
-                    configItem.payment_allowed_networks != "" &&
-                    configItem.payment_supported_capabilities != null &&
-                    configItem.payment_supported_capabilities != "" &&
-                    configItem.payment_supported_card_countries != null &&
-                    configItem.shipping_supported_contacts != null &&
-                    configItem.billing_supported_contacts != null &&
-                    configItem.tokenization != null)
+                if(configItem.merchant_name && 
+                    configItem.merchant_name !== "" &&
+                    configItem.merchant_country_code && 
+                    configItem.merchant_country_code !== "" && 
+                    configItem.payment_allowed_networks &&
+                    configItem.payment_allowed_networks !== "" &&
+                    configItem.payment_supported_capabilities &&
+                    configItem.payment_supported_capabilities !== "" &&
+                    configItem.payment_supported_card_countries &&
+                    configItem.shipping_supported_contacts &&
+                    configItem.billing_supported_contacts &&
+                    configItem.tokenization)
                 {
                     hasGooglePay = true;
                     merchant_name = configItem.merchant_name;
