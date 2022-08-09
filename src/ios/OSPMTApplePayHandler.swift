@@ -1,11 +1,17 @@
-import PassKit
-
 class OSPMTApplePayHandler: NSObject {
-    let configuration: OSPMTApplePayConfiguration
+    let configuration: OSPMTConfigurationDelegate
+    let availabilityBehaviour: OSPMTAvailabilityDelegate
     
-    init(configurationSource: OSPMTConfiguration = Bundle.main.infoDictionary!) {
-        self.configuration = OSPMTApplePayConfiguration(source: configurationSource)
+    init(configuration: OSPMTConfigurationDelegate, availabilityBehaviour: OSPMTAvailabilityDelegate) {
+        self.configuration = configuration
+        self.availabilityBehaviour = availabilityBehaviour
         super.init()
+    }
+    
+    convenience init(configurationSource: OSPMTConfiguration = Bundle.main.infoDictionary!) {
+        let applePayConfiguration = OSPMTApplePayConfiguration(source: configurationSource)
+        let applePayAvailabilityBehaviour = OSPMTApplePayAvailabilityBehaviour(configuration: applePayConfiguration)
+        self.init(configuration: applePayConfiguration, availabilityBehaviour: applePayAvailabilityBehaviour)
     }
 }
 
@@ -13,5 +19,9 @@ class OSPMTApplePayHandler: NSObject {
 extension OSPMTApplePayHandler: OSPMTHandlerDelegate {
     func setupConfiguration() -> Result<String, OSPMTError> {
         !self.configuration.description.isEmpty ? .success(self.configuration.description) : .failure(.invalidConfiguration)
+    }
+    
+    func checkWalletAvailability() -> OSPMTError? {
+        self.availabilityBehaviour.checkWallet() ?? self.availabilityBehaviour.checkPayment() ?? self.availabilityBehaviour.checkPaymentSetup()
     }
 }

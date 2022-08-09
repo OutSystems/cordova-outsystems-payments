@@ -1,4 +1,4 @@
-protocol OSPMTCallbackDelegate {
+protocol OSPMTCallbackDelegate: AnyObject {
     func callback(result: String?, error: OSPMTError?)
 }
 

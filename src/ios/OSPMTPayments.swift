@@ -25,4 +25,12 @@ extension OSPMTPayments: OSPMTActionDelegate {
             self.delegate.callback(error: error)
         }
     }
+    
+    func checkWalletSetup() {
+        if let error = self.handler.checkWalletAvailability() {
+            self.delegate.callback(error: error)
+        } else {
+            self.delegate.callbackSuccess()
+        }
+    }
 }

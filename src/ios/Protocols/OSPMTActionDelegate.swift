@@ -1,3 +1,4 @@
-protocol OSPMTActionDelegate {
+protocol OSPMTActionDelegate: AnyObject {
     func setupConfiguration()
+    func checkWalletSetup()
 }

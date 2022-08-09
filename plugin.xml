@@ -102,7 +102,13 @@
     <!-- iOS Source Files -->
     <source-file src="src/ios/Error/OSPMTError.swift" />
 
+    <source-file src="src/ios/Extensions/PKMerchantCapability+Adapter.swift" />
+    <source-file src="src/ios/Extensions/PKPassLibrary+OSPMTWalletAvailabilityDelegate.swift" />
+    <source-file src="src/ios/Extensions/PKPaymentAuthorizationController+OSPMTSetupAvailabilityDelegate.swift" />
+    <source-file src="src/ios/Extensions/PKPaymentNetwork+Adapter.swift" />
+
     <source-file src="src/ios/Protocols/OSPMTActionDelegate.swift" />
+    <source-file src="src/ios/Protocols/OSPMTAvailabilityDelegate.swift" />
     <source-file src="src/ios/Protocols/OSPMTCallbackDelegate.swift" />
     <source-file src="src/ios/Protocols/OSPMTConfigurationDelegate.swift" />
     <source-file src="src/ios/Protocols/OSPMTHandlerDelegate.swift" />
