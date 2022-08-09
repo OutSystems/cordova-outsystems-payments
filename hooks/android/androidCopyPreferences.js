@@ -25,41 +25,70 @@ module.exports = function (context) {
         jsonConfig = path.join(projectRoot, configFileName);
         var jsonConfigFile = fs.readFileSync(jsonConfig).toString();
         var jsonParsed = JSON.parse(jsonConfigFile);
-
-        jsonParsed.app_configurations.forEach(function(configItem) {
-            if (configItem.service_id == ServiceEnum.GooglePay) {
-                if(configItem.merchant_name && 
-                    configItem.merchant_name !== "" &&
-                    configItem.merchant_country_code && 
-                    configItem.merchant_country_code !== "" && 
-                    configItem.payment_allowed_networks &&
-                    configItem.payment_allowed_networks !== "" &&
-                    configItem.payment_supported_capabilities &&
-                    configItem.payment_supported_capabilities !== "" &&
-                    configItem.payment_supported_card_countries &&
-                    configItem.shipping_supported_contacts &&
-                    configItem.billing_supported_contacts &&
-                    configItem.tokenization)
-                {
-                    hasGooglePay = true;
-                    merchant_name = configItem.merchant_name;
-                    merchant_country_code = configItem.merchant_country_code;
-                    payment_allowed_networks = configItem.payment_allowed_networks;
-                    payment_supported_capabilities = configItem.payment_supported_capabilities;
-                    payment_supported_card_countries = configItem.payment_supported_card_countries;
-                    shipping_supported_contacts = configItem.shipping_supported_contacts;
-                    billing_supported_contacts = configItem.billing_supported_contacts;
-                    tokenization = JSON.stringify(configItem.tokenization);
-                }
-                else{
-                    throw new Error("Missing configuration file or error trying to obtain the configuration.");
-                }
-            }
-        });
-
-    } catch {
+    }
+    catch {
         throw new Error("Missing configuration file or error trying to obtain the configuration.");
     }
+
+    jsonParsed.app_configurations.forEach(function(configItem) {
+        if (configItem.service_id == ServiceEnum.GooglePay) {
+            hasGooglePay = true;
+            var error_list = [];
+
+            if(configItem.merchant_name && configItem.merchant_name !== ""){
+                merchant_name = configItem.merchant_name;
+            }
+            else{
+                error_list.push('Merchant Name');
+            }
+
+            if(configItem.merchant_country_code && configItem.merchant_country_code !== ""){
+                merchant_country_code = configItem.merchant_country_code;
+            }
+            else{
+                error_list.push('Merchant Country');
+            }
+
+            if(configItem.payment_allowed_networks && configItem.payment_allowed_networks.length > 0){
+                payment_allowed_networks = configItem.payment_allowed_networks;
+            }
+            else{
+                error_list.push('Payment Allowed Networks');
+            }
+
+            if(configItem.payment_supported_capabilities && configItem.payment_supported_capabilities.length > 0){
+                payment_supported_capabilities = configItem.payment_supported_capabilities;
+            }
+            else{
+                error_list.push('Payment Supported Capabilities');
+            }
+
+            if(configItem.payment_supported_card_countries && configItem.payment_supported_card_countries.length > 0){
+                payment_supported_card_countries = configItem.payment_supported_card_countries;
+            }
+
+            if(configItem.shipping_supported_contacts && configItem.shipping_supported_contacts.length > 0){
+                shipping_supported_contacts = configItem.shipping_supported_contacts;
+            }
+
+            if(configItem.billing_supported_contacts && configItem.billing_supported_contacts.length > 0){
+                billing_supported_contacts = configItem.billing_supported_contacts;
+            }
+
+            if(configItem.tokenization){
+                tokenization = JSON.stringify(configItem.tokenization);
+            }
+            else{
+                error_list.push('PSP information');
+            }
+
+            if (error_list.length > 0) {
+                throw new Error("The following fields are either missing or empty in the configuration: " + error_list);
+            }
+            return;
+        }
+    });
+}
 
     if(hasGooglePay){
         var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
