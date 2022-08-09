@@ -88,7 +88,6 @@ module.exports = function (context) {
             return;
         }
     });
-}
 
     if(hasGooglePay){
         var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
@@ -138,4 +137,5 @@ module.exports = function (context) {
         var resultXmlStrings = etreeStrings.write();
         fs.writeFileSync(stringsXmlPath, resultXmlStrings);
     }
+
 };
