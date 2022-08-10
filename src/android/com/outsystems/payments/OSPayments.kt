@@ -48,6 +48,12 @@ class OSPayments : CordovaImplementation() {
                 "checkWalletSetup" -> {
                     checkWalletSetup()
                 }
+                "checkWalletSetup" -> {
+                    checkWalletSetup()
+                }
+                "setDetails" -> {
+                    setDetailsAndTriggerPayment()
+                }
                 else -> false
             }
             true
@@ -68,6 +74,16 @@ class OSPayments : CordovaImplementation() {
 
     private fun checkWalletSetup(){
         paymentsController.verifyIfWalletIsSetup(getActivity(),
+            {
+                sendPluginResult(it, null)
+            }, {
+                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+            }
+        )
+    }
+
+    private fun setDetailsAndTriggerPayment(){
+        paymentsController.setDetailsAndTriggerPayment(getActivity(),
             {
                 sendPluginResult(it, null)
             }, {
