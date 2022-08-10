@@ -23,7 +23,7 @@ protocol OSPMTApplePaySetupAvailabilityDelegate: OSPMTSetupAvailabilityDelegate 
     ///   - networks: Array of payment networks available by a merchant
     ///   - merchantCapabilities: Bit set containing the payment capabilities available by a merchant.
     /// - Returns: A boolean indicating if the payment is available.
-    static func isPaymentAvailable(using networks: [PKPaymentNetwork], and merchantCapabilities: PKMerchantCapability) -> Bool
+    static func isPaymentAvailable(using networks: [PKPaymentNetwork]?, and merchantCapabilities: PKMerchantCapability?) -> Bool
 }
 
 // MARK: - OSPMTAvailabilityDelegate Protocol Methods
@@ -84,9 +84,9 @@ class OSPMTApplePayAvailabilityBehaviour: OSPMTAvailabilityDelegate {
         var error: OSPMTError?
         
         if shouldVerifySetup {
-            if let supportedNetworks = self.configuration.supportedNetworks,
-                let merchantCapabilities = self.configuration.merchantCapabilities,
-                !self.setupAvailableBehaviour.isPaymentAvailable(using: supportedNetworks, and: merchantCapabilities) {
+            if !self.setupAvailableBehaviour.isPaymentAvailable(
+                using: self.configuration.supportedNetworks, and: self.configuration.merchantCapabilities
+            ) {
                 error = .setupPaymentNotAvailable
             }
         } else if !self.setupAvailableBehaviour.isPaymentAvailable() {

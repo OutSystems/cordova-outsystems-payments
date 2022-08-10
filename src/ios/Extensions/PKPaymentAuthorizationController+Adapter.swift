@@ -12,8 +12,9 @@ extension PKPaymentAuthorizationController: OSPMTApplePaySetupAvailabilityDelega
     ///   - networks: Array of payment networks available by a merchant
     ///   - merchantCapabilities: Bit set containing the payment capabilities available by a merchant.
     /// - Returns: A boolean indicating if the payment is available.
-    static func isPaymentAvailable(using networks: [PKPaymentNetwork], and merchantCapabilities: PKMerchantCapability) -> Bool {
-        Self.canMakePayments(usingNetworks: networks, capabilities: merchantCapabilities)
+    static func isPaymentAvailable(using networks: [PKPaymentNetwork]?, and merchantCapabilities: PKMerchantCapability?) -> Bool {
+        guard let networks = networks, let merchantCapabilities = merchantCapabilities else { return false }
+        return Self.canMakePayments(usingNetworks: networks, capabilities: merchantCapabilities)
     }
 }
 
