@@ -1,16 +1,26 @@
 package com.outsystems.payments
 
 import android.app.Activity
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import com.google.android.gms.wallet.AutoResolveHelper
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonSyntaxException
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.GooglePayManager
 import com.outsystems.plugins.payments.controller.GooglePlayHelper
 import com.outsystems.plugins.payments.controller.PaymentsController
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
+import com.outsystems.plugins.payments.model.PaymentDetails
+import com.outsystems.plugins.payments.model.PaymentsError
 import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
+import org.json.JSONObject
 
 class OSPayments : CordovaImplementation() {
 
@@ -18,6 +28,8 @@ class OSPayments : CordovaImplementation() {
     private lateinit var googlePayManager: GooglePayManager
     private lateinit var paymentsController: PaymentsController
     private lateinit var googlePlayHelper: GooglePlayHelper
+
+    val gson by lazy { Gson() }
 
     companion object {
         private const val ERROR_FORMAT_PREFIX = "OS-PLUG-PMT-"
@@ -52,7 +64,7 @@ class OSPayments : CordovaImplementation() {
                     checkWalletSetup()
                 }
                 "setDetails" -> {
-                    setDetailsAndTriggerPayment()
+                    setDetailsAndTriggerPayment(args)
                 }
                 else -> false
             }
@@ -82,14 +94,28 @@ class OSPayments : CordovaImplementation() {
         )
     }
 
-    private fun setDetailsAndTriggerPayment(){
-        paymentsController.setDetailsAndTriggerPayment(getActivity(),
-            {
-                sendPluginResult(it, null)
-            }, {
-                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
-            }
-        )
+    private fun setDetailsAndTriggerPayment(args: JSONArray){
+        setAsActivityResultCallback()
+
+        val paymentDetails = buildPaymentDetails(args)
+
+        if(paymentDetails != null){
+            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails,
+                {
+                    sendPluginResult(it, null)
+                }, {
+                    sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+                }
+            )
+        }
+        else{
+            sendPluginResult(null, Pair(formatErrorCode(PaymentsError.INVALID_PAYMENT_DETAILS.code), PaymentsError.INVALID_PAYMENT_DETAILS.description))
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        paymentsController.handleActivityResult(requestCode, resultCode, intent)
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
@@ -118,6 +144,14 @@ class OSPayments : CordovaImplementation() {
             activity.getString(getStringResourceId(activity, BILLING_SUPPORTED_CONTACTS)).split(","),
             activity.getString(getStringResourceId(activity, TOKENIZATION))
         )
+    }
+
+    private fun buildPaymentDetails(args: JSONArray) : PaymentDetails? {
+        return try {
+            gson.fromJson(args.getString(0), PaymentDetails::class.java)
+        } catch (e: Exception){
+            null
+        }
     }
 
     private fun getStringResourceId(activity: Activity, typeAndName: String): Int {
