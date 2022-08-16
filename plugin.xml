@@ -31,6 +31,7 @@
       <string name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string>
       <string name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string>
       <string name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string>
+      <string name="shipping_country_codes">SHIPPING_COUNTRY_CODES</string>
       <string name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string>
       <string name="tokenization">TOKENIZATION</string>
     </config-file>

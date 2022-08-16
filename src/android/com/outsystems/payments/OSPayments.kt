@@ -39,6 +39,7 @@ class OSPayments : CordovaImplementation() {
         private const val PAYMENT_SUPPORTED_CAPABILITIES = "payment_supported_capabilities"
         private const val PAYMENT_SUPPORTED_CARD_COUNTRIES = "payment_supported_card_countries"
         private const val SHIPPING_SUPPORTED_CONTACTS = "shipping_supported_contacts"
+        private const val SHIPPING_COUNTRY_CODES = "shipping_country_codes"
         private const val BILLING_SUPPORTED_CONTACTS = "billing_supported_contacts"
         private const val TOKENIZATION = "tokenization"
     }
@@ -141,6 +142,7 @@ class OSPayments : CordovaImplementation() {
             activity.getString(getStringResourceId(activity, PAYMENT_SUPPORTED_CAPABILITIES)).split(","),
             activity.getString(getStringResourceId(activity, PAYMENT_SUPPORTED_CARD_COUNTRIES)).split(","),
             activity.getString(getStringResourceId(activity, SHIPPING_SUPPORTED_CONTACTS)).split(","),
+            activity.getString(getStringResourceId(activity, SHIPPING_COUNTRY_CODES)).split(","),
             activity.getString(getStringResourceId(activity, BILLING_SUPPORTED_CONTACTS)).split(","),
             activity.getString(getStringResourceId(activity, TOKENIZATION))
         )
