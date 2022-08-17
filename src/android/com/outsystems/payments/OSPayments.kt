@@ -96,13 +96,10 @@ class OSPayments : CordovaImplementation() {
         val paymentDetails = buildPaymentDetails(args)
 
         if(paymentDetails != null){
-            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails,
-                {
-                    sendPluginResult(it, null)
-                }, {
-                    sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
-                }
-            )
+            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails
+            ) {
+                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+            }
         }
         else{
             sendPluginResult(null, Pair(formatErrorCode(PaymentsError.INVALID_PAYMENT_DETAILS.code), PaymentsError.INVALID_PAYMENT_DETAILS.description))
