@@ -1,13 +1,8 @@
 package com.outsystems.payments
 
 import android.app.Activity
-import android.app.Activity.RESULT_CANCELED
-import android.app.Activity.RESULT_OK
 import android.content.Intent
-import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonSyntaxException
 import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.GooglePayManager
@@ -116,7 +111,13 @@ class OSPayments : CordovaImplementation() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
         super.onActivityResult(requestCode, resultCode, intent)
-        paymentsController.handleActivityResult(requestCode, resultCode, intent)
+        paymentsController.handleActivityResult(requestCode, resultCode, intent,
+            {
+                sendPluginResult(it, null)
+            },
+            {
+                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+            })
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
