@@ -1,33 +1,33 @@
 /// All plugin errors that can be thrown
 enum OSPMTError: Int, CustomNSError, LocalizedError {
     case invalidConfiguration = 1
-    case walletNotAvailable = 2
-    case paymentNotAvailable = 3
-    case setupPaymentNotAvailable = 4
-    case invalidDecodeDetails = 6
-    case paymentTriggerPresentationFailed = 7
-    case paymentTriggerNotCompleted = 8
+    case walletNotAvailable = 3
+    case paymentNotAvailable = 5
+    case setupPaymentNotAvailable = 6
+    case invalidDecodeDetails = 8
     case invalidEncodeScope = 9
+    case paymentTriggerPresentationFailed = 10
+    case paymentCancelled = 11
     
     /// Textual description
     var errorDescription: String? {
         switch self {
         case .invalidConfiguration:
-            return "An invalid configuration was provided to the plugin."
+            return "Couldn't obtain the payment's informations from the configurations file."
         case .walletNotAvailable:
-            return "Wallet is not available on this device."
+            return "The Apple Pay is not available in the device."
         case .paymentNotAvailable:
-            return "Payment is not available on this device."
+            return "There is no payment method configured."
         case .setupPaymentNotAvailable:
-            return "Payment through the configured networks and capabilities is not available on this device."
+            return "There are no valid payment cards for the supported networks and/or capabilities."
         case .invalidDecodeDetails:
-            return "Couldn't decode payment details."
+            return "Couldn't decode the payment details."
+        case .invalidEncodeScope:
+            return "Couldn't encode the payment scope."
         case .paymentTriggerPresentationFailed:
             return "Couldn't present the Apple Pay screen."
-        case .paymentTriggerNotCompleted:
-            return "Couldn't complete the payment trigger process."
-        case .invalidEncodeScope:
-            return "Couldn't encode payment scope."
+        case .paymentCancelled:
+            return "Payment was cancelled by the user."
         }
     }
 }

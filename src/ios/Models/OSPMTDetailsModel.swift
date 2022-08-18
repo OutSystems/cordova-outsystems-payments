@@ -6,21 +6,55 @@ enum OSPMTStatus: String, Codable {
     case pending
 }
 
+/// Structure of the shipping/billing information
+struct OSPMTContact: Decodable {
+    let isCustom: Bool
+    let contactArray: [String]?
+    
+    /// Keys used to encode and decode the model.
+    enum CodingKeys: String, CodingKey {
+        case isCustom
+        case contactArray = "contactInfo"
+    }
+    
+    /// Constructor method
+    /// - Parameters:
+    ///   - isCustom: Indicates if the custom contact information should be used when trigger a payment request.
+    ///   - contactArray: Shipping/Billing properties required for filling.
+    init(isCustom: Bool, contactArray: [String]?) {
+        self.isCustom = isCustom
+        self.contactArray = contactArray
+    }
+    
+    /// Creates a new instance by decoding from the given decoder.
+    ///
+    /// This initializer throws an error if reading from the decoder fails, or
+    /// if the data read is corrupted or otherwise invalid.
+    ///
+    /// - Parameter decoder: The decoder to read data from.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let isCustom = try container.decode(Bool.self, forKey: .isCustom)
+        let contactArray = isCustom ? try container.decodeIfPresent([String].self, forKey: .contactArray) : nil
+        self.init(isCustom: isCustom, contactArray: contactArray)
+    }
+}
+
 /// Payment Details to be processed.
 struct OSPMTDetailsModel: Decodable {
     let amount: Decimal
     let currency: String
     let status: OSPMTStatus
-    let shippingContactArray: [String]?
-    let billingContactArray: [String]?
+    let shippingContact: OSPMTContact
+    let billingContact: OSPMTContact
     
     /// Keys used to encode and decode the model.
     enum CodingKeys: String, CodingKey {
         case amount
         case currency
         case status
-        case shippingContactArray = "shippingContacts"
-        case billingContactArray = "billingContacts"
+        case shippingContact = "shippingContacts"
+        case billingContact = "billingContacts"
     }
     
     /// Constructor method.
@@ -28,14 +62,14 @@ struct OSPMTDetailsModel: Decodable {
     ///   - amount: Amount to be charged.
     ///   - currency: The three-letter ISO 4217 currency code.
     ///   - status: Final value status.
-    ///   - shippingContactArray: Shipping properties required for filling.
-    ///   - billingContactArray: Billiing properties required for filling.
-    init(amount: Decimal, currency: String, status: OSPMTStatus, shippingContactArray: [String]? = nil, billingContactArray: [String]? = nil) {
+    ///   - shippingContact: Shipping properties required for filling.
+    ///   - billingContact: Billiing properties required for filling.
+    init(amount: Decimal, currency: String, status: OSPMTStatus, shippingContact: OSPMTContact, billingContact: OSPMTContact) {
         self.amount = amount
         self.currency = currency
         self.status = status
-        self.shippingContactArray = shippingContactArray
-        self.billingContactArray = billingContactArray
+        self.shippingContact = shippingContact
+        self.billingContact = billingContact
     }
     
     /// Creates a new instance by decoding from the given decoder.
@@ -49,10 +83,10 @@ struct OSPMTDetailsModel: Decodable {
         let amount = try container.decode(Decimal.self, forKey: .amount)
         let currency = try container.decode(String.self, forKey: .currency)
         let status = try container.decode(OSPMTStatus.self, forKey: .status)
-        let shippingContactArray = try container.decodeIfPresent([String].self, forKey: .shippingContactArray)
-        let billingContactArray = try container.decodeIfPresent([String].self, forKey: .billingContactArray)
+        let shippingContact = try container.decode(OSPMTContact.self, forKey: .shippingContact)
+        let billingContact = try container.decode(OSPMTContact.self, forKey: .billingContact)
         self.init(
-            amount: amount, currency: currency, status: status, shippingContactArray: shippingContactArray, billingContactArray: billingContactArray
+            amount: amount, currency: currency, status: status, shippingContact: shippingContact, billingContact: billingContact
         )
     }
 }

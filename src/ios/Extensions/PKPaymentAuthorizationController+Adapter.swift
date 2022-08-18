@@ -47,10 +47,14 @@ extension PKPaymentAuthorizationController: OSPMTApplePayRequestTriggerDelegate 
         paymentRequest.merchantCapabilities = merchantCapabilities
         paymentRequest.paymentSummaryItems = paymentSummaryItems
         paymentRequest.requiredBillingContactFields = delegate.getContactFields(
-            for: detailsModel.billingContactArray ?? delegate.configuration.billingSupportedContacts
+            for: detailsModel.billingContact.isCustom
+            ? detailsModel.billingContact.contactArray
+            : delegate.configuration.billingSupportedContacts
         )
         paymentRequest.requiredShippingContactFields = delegate.getContactFields(
-            for: detailsModel.shippingContactArray ?? delegate.configuration.shippingSupportedContacts
+            for: detailsModel.shippingContact.isCustom
+            ? detailsModel.shippingContact.contactArray
+            : delegate.configuration.shippingSupportedContacts
         )
         paymentRequest.supportedCountries = delegate.configuration.supportedCountries
         paymentRequest.supportedNetworks = supportedNetworks

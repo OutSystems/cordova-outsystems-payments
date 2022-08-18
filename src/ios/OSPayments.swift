@@ -39,7 +39,7 @@ extension OSPayments: PlatformProtocol {
 
         if let error = error {
             let errorDict = [
-                "code": "OS-PLUG-PMT-\(String(format: "%04d", error.code))",
+                "code": "OS-PLUG-PAYM-\(String(format: "%04d", error.code))",
                 "message": error.localizedDescription
             ]
             pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: errorDict);

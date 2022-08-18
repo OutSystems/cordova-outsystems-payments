@@ -1,6 +1,6 @@
 /// Class resopnsible to manage the Apple Pay payment service requests. It delegates every operation type to its manager.
 class OSPMTApplePayHandler: NSObject {
-    let configuration: OSPMTConfigurationDelegate
+    let configuration: OSPMTConfigurationModel
     let availabilityBehaviour: OSPMTAvailabilityDelegate
     let requestBehaviour: OSPMTRequestDelegate
     
@@ -9,7 +9,7 @@ class OSPMTApplePayHandler: NSObject {
     ///   - configuration: Configuration manager.
     ///   - availabilityBehaviour: Availability manager.
     ///   - requestBehaviour: Request trigger manager.
-    init(configuration: OSPMTConfigurationDelegate, availabilityBehaviour: OSPMTAvailabilityDelegate, requestBehaviour: OSPMTRequestDelegate) {
+    init(configuration: OSPMTConfigurationModel, availabilityBehaviour: OSPMTAvailabilityDelegate, requestBehaviour: OSPMTRequestDelegate) {
         self.configuration = configuration
         self.availabilityBehaviour = availabilityBehaviour
         self.requestBehaviour = requestBehaviour
@@ -33,7 +33,11 @@ extension OSPMTApplePayHandler: OSPMTHandlerDelegate {
     /// Allows the configuration of the payment service.
     /// - Returns: Returns a JSON mapping if successful or an error if anything failed.
     func setupConfiguration() -> Result<String, OSPMTError> {
-        !self.configuration.description.isEmpty ? .success(self.configuration.description) : .failure(.invalidConfiguration)
+        guard
+            let configurationData = try? JSONEncoder().encode(self.configuration),
+            let configurationText = String(data: configurationData, encoding: .utf8)
+        else { return .failure(.invalidConfiguration) }
+        return .success(configurationText)
     }
     
     /// Checks for the Wallet and Payment availability.

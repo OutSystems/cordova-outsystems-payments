@@ -99,7 +99,7 @@ extension OSPMTApplePayRequestBehaviour: PKPaymentAuthorizationControllerDelegat
             if self.paymentStatus == .success, let paymentScope = self.paymentScope {
                 self.completionHandler(.success(paymentScope))
             } else {
-                self.completionHandler(.failure(.paymentTriggerNotCompleted))
+                self.completionHandler(.failure(.paymentCancelled))
             }
         }
     }
@@ -114,6 +114,7 @@ extension OSPMTApplePayRequestBehaviour: PKPaymentAuthorizationControllerDelegat
             self.paymentScope = scopeModel
             self.paymentStatus = .success
         } else {
+            self.paymentScope = nil
             self.paymentStatus = .failure
         }
         

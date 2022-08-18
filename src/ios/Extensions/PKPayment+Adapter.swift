@@ -18,7 +18,7 @@ extension PKPayment {
     
     /// Converts a `PKPayment` object into a dictionary that relates to an `OSPMTDataModel` object.
     /// - Returns: The corresponding `OSPMTDataModel` dictionary object.
-    func createTokenDataData() -> [String: Any] {
+    private func createTokenDataData() -> [String: Any] {
         var result: [String: Any] = [
             OSPMTDataModel.CodingKeys.tokenData.rawValue: self.createTokenData(for: self.token.paymentData)
         ]
@@ -39,7 +39,7 @@ extension PKPayment {
     /// Takes the passed payment data object and converts it into a dictionary that relates to an `OSPMTTokenInfoModel` object.
     /// - Parameter paymentData: `Data` type object that contains information related to a payment token.
     /// - Returns: The corresponding `OSPMTTokenInfoModel` dictionary object.
-    func createTokenData(for paymentData: Data) -> [String: String] {
+    private func createTokenData(for paymentData: Data) -> [String: String] {
         // TODO: The type passed here will probably be changed into the Payment Service Provider's name when this is implemented.
         var result = [OSPMTTokenInfoModel.CodingKeys.type.rawValue: "Apple Pay"]
         
@@ -53,7 +53,7 @@ extension PKPayment {
     /// Takes the passed contact object and converts it into a dictionary that relates to an `OSPMTContactInfoModel` object.
     /// - Parameter contact: `PKContact` type object that contains information related to the filled Billing or Shipping Information
     /// - Returns: The corresponding `OSPMTContactInfoModel` dictionary object.
-    func createContactInfoData(for contact: PKContact) -> [String: Any]? {
+    private func createContactInfoData(for contact: PKContact) -> [String: Any]? {
         var result = [String: Any]()
         if let address = contact.postalAddress {
             result[OSPMTContactInfoModel.CodingKeys.address.rawValue] = self.createAddressData(for: address)
@@ -74,7 +74,7 @@ extension PKPayment {
     /// Takes the passed address object and converts it into a dictionary that relates to an `OSPMTAddressModel` object.
     /// - Parameter postalAddress: `CNPostalAddress` type object that contains an address related to the filled Billing or Shipping Information.
     /// - Returns: The corresponding `OSPMTAddressModel` dictionary object.
-    func createAddressData(for postalAddress: CNPostalAddress) -> [String: String] {
+    private func createAddressData(for postalAddress: CNPostalAddress) -> [String: String] {
         var result = [
             OSPMTAddressModel.CodingKeys.postalCode.rawValue: postalAddress.postalCode,
             OSPMTAddressModel.CodingKeys.fullAddress.rawValue: postalAddress.street,

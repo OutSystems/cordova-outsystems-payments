@@ -1,6 +1,6 @@
 /// Class that provides the bridge between the library and 3rd party consumers.
 class OSPMTPayments: NSObject {
-    private let delegate: OSPMTCallbackDelegate
+    private weak var delegate: OSPMTCallbackDelegate?
     private let handler: OSPMTHandlerDelegate
     
     /// Constructor method.
@@ -30,18 +30,18 @@ extension OSPMTPayments: OSPMTActionDelegate {
         
         switch result {
         case .success(let message):
-            self.delegate.callback(result: message)
+            self.delegate?.callback(result: message)
         case .failure(let error):
-            self.delegate.callback(error: error)
+            self.delegate?.callback(error: error)
         }
     }
     
     /// Verifies the device is ready to process a payment, considering the configuration provided before.
     func checkWalletSetup() {
         if let error = self.handler.checkWalletAvailability() {
-            self.delegate.callback(error: error)
+            self.delegate?.callback(error: error)
         } else {
-            self.delegate.callbackSuccess()
+            self.delegate?.callbackSuccess()
         }
     }
     
@@ -58,16 +58,16 @@ extension OSPMTPayments: OSPMTActionDelegate {
                     let scopeResult = self.encode(scopeModel)
                     switch scopeResult {
                     case .success(let scopeText):
-                        self.delegate.callback(result: scopeText)
+                        self.delegate?.callback(result: scopeText)
                     case .failure(let error):
-                        self.delegate.callback(error: error)
+                        self.delegate?.callback(error: error)
                     }
                 case .failure(let error):
-                    self.delegate.callback(error: error)
+                    self.delegate?.callback(error: error)
                 }
             }
         case .failure(let error):
-            self.delegate.callback(error: error)
+            self.delegate?.callback(error: error)
         }
     }
 }
