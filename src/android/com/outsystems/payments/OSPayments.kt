@@ -56,9 +56,6 @@ class OSPayments : CordovaImplementation() {
                 "checkWalletSetup" -> {
                     checkWalletSetup()
                 }
-                "checkWalletSetup" -> {
-                    checkWalletSetup()
-                }
                 "setDetails" -> {
                     setDetailsAndTriggerPayment(args)
                 }
