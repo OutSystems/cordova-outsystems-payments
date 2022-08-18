@@ -67,7 +67,7 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun setupConfiguration(args: JSONArray) {
-        paymentsController.setupConfiguration(
+        paymentsController.setupConfiguration(getActivity(), args.get(0).toString(),
             {
                 sendPluginResult(it, null)
             },
