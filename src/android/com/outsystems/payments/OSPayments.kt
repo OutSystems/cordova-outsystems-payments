@@ -51,7 +51,7 @@ class OSPayments : CordovaImplementation() {
         val result = runBlocking {
             when (action) {
                 "setupConfiguration" -> {
-                    setupConfiguration()
+                    setupConfiguration(args)
                 }
                 "checkWalletSetup" -> {
                     checkWalletSetup()
@@ -66,7 +66,7 @@ class OSPayments : CordovaImplementation() {
         return result
     }
 
-    private fun setupConfiguration() {
+    private fun setupConfiguration(args: JSONArray) {
         paymentsController.setupConfiguration(
             {
                 sendPluginResult(it, null)
