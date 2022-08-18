@@ -13,6 +13,7 @@ module.exports = function (context) {
     var payment_supported_capabilities = [];
     var payment_supported_card_countries = [];
     var shipping_supported_contacts = [];
+    var shipping_country_codes = [];
     var billing_supported_contacts = [];
     var tokenization = "";
     var hasGooglePay = false;
@@ -71,6 +72,10 @@ module.exports = function (context) {
                 shipping_supported_contacts = configItem.shipping_supported_contacts;
             }
 
+            if(configItem.shipping_country_codes && configItem.shipping_country_codes.length > 0){
+                shipping_country_codes = configItem.shipping_country_codes;
+            }
+
             if(configItem.billing_supported_contacts && configItem.billing_supported_contacts.length > 0){
                 billing_supported_contacts = configItem.billing_supported_contacts;
             }
@@ -122,6 +127,11 @@ module.exports = function (context) {
         var shippingContactsTags = etreeStrings.findall('./string[@name="shipping_supported_contacts"]');
         for (var i = 0; i < shippingContactsTags.length; i++) {
             shippingContactsTags[i].text = shipping_supported_contacts;
+        }
+
+        var shippingCountriesTags = etreeStrings.findall('./string[@name="shipping_country_codes"]');
+        for (var i = 0; i < shippingCountriesTags.length; i++) {
+            shippingCountriesTags[i].text = shipping_country_codes;
         }
 
         var billingContactsTags = etreeStrings.findall('./string[@name="billing_supported_contacts"]');
