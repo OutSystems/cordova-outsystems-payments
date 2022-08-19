@@ -130,15 +130,20 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun buildPaymentConfigurationInfo(activity: Activity) : PaymentConfigurationInfo{
+
+        val shippingContacts = activity.getString(getStringResourceId(activity, SHIPPING_SUPPORTED_CONTACTS)).split(",")
+        val shippingCountries = activity.getString(getStringResourceId(activity, SHIPPING_COUNTRY_CODES)).split(",")
+        val billingContacts = activity.getString(getStringResourceId(activity, BILLING_SUPPORTED_CONTACTS)).split(",")
+
         return PaymentConfigurationInfo(
             activity.getString(getStringResourceId(activity, MERCHANT_NAME)),
             activity.getString(getStringResourceId(activity, MERCHANT_COUNTRY_CODE)),
             activity.getString(getStringResourceId(activity, PAYMENT_ALLOWED_NETWORKS)).split(","),
             activity.getString(getStringResourceId(activity, PAYMENT_SUPPORTED_CAPABILITIES)).split(","),
             activity.getString(getStringResourceId(activity, PAYMENT_SUPPORTED_CARD_COUNTRIES)).split(","),
-            activity.getString(getStringResourceId(activity, SHIPPING_SUPPORTED_CONTACTS)).split(","),
-            activity.getString(getStringResourceId(activity, SHIPPING_COUNTRY_CODES)).split(","),
-            activity.getString(getStringResourceId(activity, BILLING_SUPPORTED_CONTACTS)).split(","),
+            if(shippingContacts.isNotEmpty() && shippingContacts[0].isNotEmpty()) shippingContacts else listOf(),
+            if(shippingCountries.isNotEmpty() && shippingCountries[0].isNotEmpty()) shippingCountries else listOf(),
+            if(billingContacts.isNotEmpty() && billingContacts[0].isNotEmpty()) billingContacts else listOf(),
             activity.getString(getStringResourceId(activity, TOKENIZATION))
         )
     }
