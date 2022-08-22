@@ -15,7 +15,6 @@ import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
-import org.json.JSONObject
 
 class OSPayments : CordovaImplementation() {
 
