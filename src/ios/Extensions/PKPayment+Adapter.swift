@@ -61,7 +61,7 @@ extension PKPayment {
         if let phoneNumber = contact.phoneNumber {
             result[OSPMTContactInfoModel.CodingKeys.phoneNumber.rawValue] = phoneNumber.stringValue
         }
-        if let name = contact.name, let givenName = name.givenName, let familyName = name.familyName {
+        if let name = contact.name, let givenName = name.givenName, let familyName = name.familyName, !givenName.isEmpty, !familyName.isEmpty {
             result[OSPMTContactInfoModel.CodingKeys.name.rawValue] = "\(givenName) \(familyName)"
         }
         if let email = contact.emailAddress {
