@@ -26,7 +26,7 @@ class OSPayments : CordovaImplementation() {
     val gson by lazy { Gson() }
 
     companion object {
-        private const val ERROR_FORMAT_PREFIX = "OS-PLUG-PMT-"
+        private const val ERROR_FORMAT_PREFIX = "OS-PLUG-PAYM-"
         private const val MERCHANT_NAME = "merchant_name"
         private const val MERCHANT_COUNTRY_CODE = "merchant_country_code"
         private const val PAYMENT_ALLOWED_NETWORKS = "payment_allowed_networks"
