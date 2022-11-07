@@ -1,4 +1,4 @@
-import OSCore
+import OSCommonPluginLib
 
 @objc(OSPayments)
 class OSPayments: CDVPlugin {

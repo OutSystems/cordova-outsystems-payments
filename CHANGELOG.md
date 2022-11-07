@@ -8,21 +8,21 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+### 2022-11-08
+- Fix: [iOS] Replace the old `OSCore` framework for the new `OSCommonPluginLib` pod.
+
 ## [Version 1.0.0]
 
-## 17-08-2022
-Android - implement setDetails (triggerPayment) for Android, using Google Pay (https://outsystemsrd.atlassian.net/browse/RMET-1009)
+### 2022-08-17
+- Android - implement setDetails (triggerPayment) for Android, using Google Pay (https://outsystemsrd.atlassian.net/browse/RMET-1009)
 
-## 09-08-2022
-Android - implemented isReadyToPay for Google Pay (https://outsystemsrd.atlassian.net/browse/RMET-790)
+### 2022-08-09
+- Android - implemented isReadyToPay for Google Pay (https://outsystemsrd.atlassian.net/browse/RMET-790)
 
-## 2022-08-08
+### 2022-08-08
 - Android - added field verification to fail build if fields are missing in JSON config file (https://outsystemsrd.atlassian.net/browse/RMET-1721)
 
-## 03-08-2022
-Android - implementated setupConfiguration method for Android (https://outsystemsrd.atlassian.net/browse/RMET-1721)
-
-## 2022-08-03
+### 2022-08-03
 - Android - implementated setupConfiguration method for Android (https://outsystemsrd.atlassian.net/browse/RMET-1721)
 - Feat: Set Payment Details (https://outsystemsrd.atlassian.net/browse/RMET-1723).
 
