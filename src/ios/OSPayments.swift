@@ -1,8 +1,9 @@
 import OSCommonPluginLib
+import OSPaymentsPluginLib
 
 @objc(OSPayments)
 class OSPayments: CDVPlugin {
-    var plugin: OSPMTPayments?
+    var plugin: OSPMTActionDelegate?
     var callbackId: String = ""
 
     override func pluginInitialize() {
