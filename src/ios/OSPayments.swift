@@ -1,5 +1,12 @@
 import OSCommonPluginLib
+
+#if STRIPE_ENABLED
+import OSStripePaymentsPluginLib
+#elseif ADYEN_ENABLED
+import OSAdyenPaymentsPluginLib
+#else
 import OSPaymentsPluginLib
+#endif
 
 @objc(OSPayments)
 class OSPayments: CDVPlugin {

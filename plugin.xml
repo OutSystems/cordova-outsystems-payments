@@ -99,6 +99,10 @@
          <array>APPLE_PAY_BILLING_SUPPORTED_CONTACTS</array>
     </config-file>
 
+    <config-file target="*-Info.plist" parent="ApplePayPaymentServiceProvider">
+         <string>APPLE_PAY_PAYMENT_SERVICE_PROVIDER</string>
+    </config-file>
+
     <!-- iOS Source Files -->
     <source-file src="src/ios/OSPayments.swift"/>
 
@@ -109,6 +113,7 @@
         <pods use-frameworks="true">
             <pod name="OSCommonPluginLib" spec="1.0.0" />
             <!--pod name="OSPaymentsPluginLib" spec="1.1.0" /-->
+            <pod name="OSPaymentsPluginLib" git="https://github.com/OutSystems/OSPaymentsLib-iOS.git" branch="feat/RMET-1994/stripe-poc" />
         </pods>
     </podspec>
 

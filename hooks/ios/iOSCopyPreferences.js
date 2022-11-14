@@ -2,6 +2,7 @@ const et = require('elementtree');
 const path = require('path');
 const fs = require('fs');
 const plist = require('plist');
+const xcode = require('xcode');
 const { ConfigParser } = require('cordova-common');
 const { Console } = require('console');
 
@@ -18,6 +19,7 @@ module.exports = function (context) {
     var payment_supported_card_countries = [];
     var shipping_supported_contacts = [];
     var billing_supported_contacts = [];
+    var payment_service_provider = "";
 
     var appNamePath = path.join(projectRoot, 'config.xml');
     var appNameParser = new ConfigParser(appNamePath);
@@ -71,7 +73,8 @@ module.exports = function (context) {
 
             shipping_supported_contacts = configItem.shipping_supported_contacts;
             billing_supported_contacts = configItem.billing_supported_contacts;
-            payment_supported_card_countries = configItem.payment_supported_card_countries;                    
+            payment_supported_card_countries = configItem.payment_supported_card_countries;
+            payment_service_provider = configItem.tokenization.gateway;
         
             if (error_list.length > 0) {
                 throw new Error("Configuration is missing the following fields: " + error_list);
@@ -80,7 +83,6 @@ module.exports = function (context) {
             return;
         }
     });
-    
 
     //Change info.plist
     var infoPlistPath = path.join(platformPath, appName + '/'+ appName +'-info.plist');
@@ -95,6 +97,7 @@ module.exports = function (context) {
     infoPlist['ApplePayPaymentSupportedCardCountries'] = payment_supported_card_countries;
     infoPlist['ApplePayShippingSupportedContacts'] = shipping_supported_contacts;
     infoPlist['ApplePayBillingSupportedContacts'] = billing_supported_contacts;
+    infoPlist['ApplePayPaymentServiceProvider'] = payment_service_provider;
 
     fs.writeFileSync(infoPlistPath, plist.build(infoPlist, { indent: '\t' }));
 
@@ -114,4 +117,42 @@ module.exports = function (context) {
     releaseEntitlements['com.apple.developer.in-app-payments'] = [merchant_id];
 
     fs.writeFileSync(releaseEntitlementsPath, plist.build(releaseEntitlements, { indent: '\t' }));
+
+    // Change podfile
+    var podfilePath = path.join(platformPath, 'Podfile');
+    var podfileContents = fs.readFileSync(podfilePath).toString();
+
+    if (payment_service_provider !== "") {
+        if (payment_service_provider.toLowerCase() === "stripe") {
+            payment_service_provider = "Stripe";
+        } else if (payment_service_provider.toLowerCase() === "adyen") {
+            payment_service_provider = "Adyen";
+        }
+    }
+
+    podfileContents = podfileContents.replace('OSPaymentsPluginLib', 'OS' + payment_service_provider + 'PaymentsPluginLib');
+
+    fs.writeFileSync(podfilePath, podfileContents);
+
+    const COMMENT_KEY = /_comment$/;
+    let pbxprojPath = path.join(platformPath, appName + '.xcodeproj', 'project.pbxproj');
+    let xcodeProject = xcode.project(pbxprojPath);
+    xcodeProject.parseSync();
+
+    let buildConfigs = xcodeProject.pbxXCBuildConfigurationSection();
+
+    for (configName in buildConfigs) {
+          if (!COMMENT_KEY.test(configName)) {
+            buildConfig = buildConfigs[configName];
+
+            var current = payment_service_provider.toUpperCase() + '_ENABLED';
+            if (typeof xcodeProject.getBuildProperty('SWIFT_ACTIVE_COMPILATION_CONDITIONS', buildConfig.name) !== 'undefined') {
+                current = xcodeProject.getBuildProperty('SWIFT_ACTIVE_COMPILATION_CONDITIONS', buildConfig.name) + ' ' + current;
+            }
+
+            xcodeProject.updateBuildProperty('SWIFT_ACTIVE_COMPILATION_CONDITIONS', current, buildConfig.name);
+          }
+        }
+
+        fs.writeFileSync(pbxprojPath, xcodeProject.writeSync());
 };
