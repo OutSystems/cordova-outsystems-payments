@@ -20,6 +20,7 @@ import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
+import org.json.JSONObject
 
 class OSPayments : CordovaImplementation() {
 
@@ -113,14 +114,14 @@ class OSPayments : CordovaImplementation() {
             {
                 //sendPluginResult(it, null)
                 //call stripe sdk with google pay token
-                processPaymentStripe(it);
+                processPaymentStripe(it)
             },
             {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
             })
     }
 
-    private fun processPaymentStripe(googlePayToken: String) {
+    private fun processPaymentStripe(googlePayObject: JSONObject?) {
 
         //initialize Stripe properly
         val stripe = Stripe(
@@ -150,27 +151,33 @@ class OSPayments : CordovaImplementation() {
         )
 
 
-        val params = PaymentMethodCreateParams.create(
-            PaymentMethodCreateParams.Card.create(googlePayToken),
-            billingDetails
-        )
+        //val params = PaymentMethodCreateParams.create(
+        //    PaymentMethodCreateParams.Card.create(googlePayToken),
+        //    billingDetails
+        //)
 
+        try {
+            if(googlePayObject != null) {
+                val params = PaymentMethodCreateParams.createFromGooglePay(googlePayObject)
+                stripe.createPaymentMethod(
+                    params,
+                    callback = object : ApiResultCallback<PaymentMethod> {
+                        override fun onSuccess(result: PaymentMethod) {
+                            // handle success
+                            val s = ""
+                        }
 
-
-        stripe.createPaymentMethod(
-            params,
-            callback = object : ApiResultCallback<PaymentMethod> {
-                override fun onSuccess(result: PaymentMethod) {
-                    // handle success
-                    val s = ""
-                }
-
-                override fun onError(e: Exception) {
-                    // handle error
-                    val s = ""
-                }
+                        override fun onError(e: Exception) {
+                            // handle error
+                            val s = ""
+                        }
+                    }
+                )
             }
-        )
+        }
+        catch (e: Exception){
+            val s = e.toString()
+        }
 
     }
 
