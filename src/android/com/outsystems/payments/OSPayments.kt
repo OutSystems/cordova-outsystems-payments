@@ -11,6 +11,11 @@ import com.outsystems.plugins.payments.controller.PaymentsController
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
 import com.outsystems.plugins.payments.model.PaymentsError
+import com.stripe.android.ApiResultCallback
+import com.stripe.android.Stripe
+import com.stripe.android.model.Address
+import com.stripe.android.model.PaymentMethod
+import com.stripe.android.model.PaymentMethodCreateParams
 import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
@@ -106,11 +111,67 @@ class OSPayments : CordovaImplementation() {
         super.onActivityResult(requestCode, resultCode, intent)
         paymentsController.handleActivityResult(requestCode, resultCode, intent,
             {
-                sendPluginResult(it, null)
+                //sendPluginResult(it, null)
+                //call stripe sdk with google pay token
+                processPaymentStripe(it);
             },
             {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
             })
+    }
+
+    private fun processPaymentStripe(googlePayToken: String) {
+
+        //initialize Stripe properly
+        val stripe = Stripe(
+            getActivity(),
+            "pk_test_51KvKHLI1WLTTyI34CsVnUY8UoKGVpeklyySXSMhucxD2fViPCE7kW7KUqZoULMtqav1h2kkaESWeQCAqXLKnszEq00mFN2SGup",
+            null,
+            true, //should be false when in production
+            emptySet()
+        )
+
+        //build Address
+        val address = Address(
+            "Caldas",
+            "PT",
+            "address line 1",
+            "2500",
+            "Leiria"
+        )
+
+        //build PaymentDetails
+
+        val billingDetails = PaymentMethod.BillingDetails(
+            address,
+            "myexampleemail@gmail.com",
+            "Alex J",
+            "917791777"
+        )
+
+
+        val params = PaymentMethodCreateParams.create(
+            PaymentMethodCreateParams.Card.create(googlePayToken),
+            billingDetails
+        )
+
+
+
+        stripe.createPaymentMethod(
+            params,
+            callback = object : ApiResultCallback<PaymentMethod> {
+                override fun onSuccess(result: PaymentMethod) {
+                    // handle success
+                    val s = ""
+                }
+
+                override fun onError(e: Exception) {
+                    // handle error
+                    val s = ""
+                }
+            }
+        )
+
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
