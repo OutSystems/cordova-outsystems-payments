@@ -11,16 +11,22 @@ import com.outsystems.plugins.payments.controller.PaymentsController
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
 import com.outsystems.plugins.payments.model.PaymentsError
+import com.outsystems.plugins.payments.model.StripePaymentRequest
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
-import com.stripe.android.model.Address
 import com.stripe.android.model.PaymentMethod
 import com.stripe.android.model.PaymentMethodCreateParams
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.BigDecimal
+import java.net.HttpURLConnection
+import java.net.URL
 
 class OSPayments : CordovaImplementation() {
 
@@ -28,6 +34,9 @@ class OSPayments : CordovaImplementation() {
     private lateinit var googlePayManager: GooglePayManager
     private lateinit var paymentsController: PaymentsController
     private lateinit var googlePlayHelper: GooglePlayHelper
+
+    //to delete
+    private lateinit var paymentDetailsForStripe: PaymentDetails
 
     val gson by lazy { Gson() }
 
@@ -97,6 +106,11 @@ class OSPayments : CordovaImplementation() {
 
         val paymentDetails = buildPaymentDetails(args)
 
+        //to delete
+        if (paymentDetails != null) {
+            paymentDetailsForStripe = paymentDetails
+        }
+
         if(paymentDetails != null){
             paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails
             ) {
@@ -111,19 +125,24 @@ class OSPayments : CordovaImplementation() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
         super.onActivityResult(requestCode, resultCode, intent)
         paymentsController.handleActivityResult(requestCode, resultCode, intent,
-            {
-                //sendPluginResult(it, null)
-                //call stripe sdk with google pay token
-                processPaymentStripe(it)
+            { jsonResult, paymentResponse ->
+                //call stripe sdk with GooglePay payment info
+                processPaymentStripe(jsonResult,
+                    {
+                        sendPluginResult(paymentResponse, null)
+                    },
+                    { error ->
+                        sendPluginResult(null, Pair(formatErrorCode(error.code), error.description))
+                    }
+                )
             },
             {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
             })
     }
 
-    private fun processPaymentStripe(googlePayObject: JSONObject?) {
+    private fun processPaymentStripe(googlePayObject: JSONObject?, onSuccess: (Boolean) -> Unit, onError : (PaymentsError) -> Unit) {
 
-        //initialize Stripe properly
         val stripe = Stripe(
             getActivity(),
             "pk_test_51KvKHLI1WLTTyI34CsVnUY8UoKGVpeklyySXSMhucxD2fViPCE7kW7KUqZoULMtqav1h2kkaESWeQCAqXLKnszEq00mFN2SGup",
@@ -131,30 +150,6 @@ class OSPayments : CordovaImplementation() {
             true, //should be false when in production
             emptySet()
         )
-
-        //build Address
-        val address = Address(
-            "Caldas",
-            "PT",
-            "address line 1",
-            "2500",
-            "Leiria"
-        )
-
-        //build PaymentDetails
-
-        val billingDetails = PaymentMethod.BillingDetails(
-            address,
-            "myexampleemail@gmail.com",
-            "Alex J",
-            "917791777"
-        )
-
-
-        //val params = PaymentMethodCreateParams.create(
-        //    PaymentMethodCreateParams.Card.create(googlePayToken),
-        //    billingDetails
-        //)
 
         try {
             if(googlePayObject != null) {
@@ -164,19 +159,65 @@ class OSPayments : CordovaImplementation() {
                     callback = object : ApiResultCallback<PaymentMethod> {
                         override fun onSuccess(result: PaymentMethod) {
                             // handle success
-                            val s = ""
+                            sendToServer(result,
+                                {
+                                    onSuccess(true)
+                                },
+                                {
+                                    onError(it)
+                                }
+                            )
                         }
-
                         override fun onError(e: Exception) {
-                            // handle error
-                            val s = ""
+                            onError(PaymentsError.PAYMENT_GENERAL_ERROR) // use general error for now, as this is a PoC
                         }
                     }
                 )
             }
         }
         catch (e: Exception){
-            val s = e.toString()
+            onError(PaymentsError.PAYMENT_GENERAL_ERROR) // use general error for now, as this is a PoC
+        }
+
+    }
+
+    private fun sendToServer(result: PaymentMethod, onSuccess: (Boolean) -> Unit, onError : (PaymentsError) -> Unit){
+
+        //create object that has a paymentMethod of type PaymentMethod and an Amount of type String, then convert it to JSON using Gson.
+        val amount = paymentDetailsForStripe.amount.multiply(BigDecimal(100)).toInt()
+        val stripePaymentRequest = StripePaymentRequest(amount, result.id!!)
+        val paymentRequestJson = Gson().toJson(stripePaymentRequest)
+
+        val url = URL("http://192.168.1.120:5000/pay")
+        val coroutine = CoroutineScope(Dispatchers.IO)
+        val openedConnection = url.openConnection()
+
+        coroutine.launch {
+            with(openedConnection as HttpURLConnection) {
+                requestMethod = "POST"
+                setRequestProperty("Content-Type", "application/json")
+                doOutput = true;
+
+                outputStream.use { os ->
+                    val input: ByteArray = paymentRequestJson.toByteArray()
+                    os.write(input, 0, input.size)
+                }
+
+                val response = StringBuffer()
+                launch {
+                    inputStream.bufferedReader().use {
+                        it.lines().forEach { line ->
+                            response.append(line)
+                        }
+                    }
+
+                    if (response.toString() == "Success!"){
+                        onSuccess(true)
+                    } else {
+                        onError(PaymentsError.PAYMENT_GENERAL_ERROR) // use general error for now, as this is a PoC
+                    }
+                }
+            }
         }
 
     }
