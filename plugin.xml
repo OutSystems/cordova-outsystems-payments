@@ -44,6 +44,7 @@
   <platform name="ios">
     <!-- Hooks -->
     <hook type="after_prepare" src="hooks/ios/iOSCopyPreferences.js" />
+    <hook type="after_plugin_add" src="hooks/ios/iOSCompilerFlag.js" />
 
     <dependency id="cordova-plugin-add-swift-support" url="https://github.com/OutSystems/cordova-plugin-add-swift-support.git#2.0.3-OS1"/>
 
