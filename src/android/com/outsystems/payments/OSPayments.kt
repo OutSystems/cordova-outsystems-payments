@@ -7,6 +7,7 @@ import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.GooglePayManager
 import com.outsystems.plugins.payments.controller.GooglePlayHelper
+import com.outsystems.plugins.payments.controller.OSPMTStripeWrapper
 import com.outsystems.plugins.payments.controller.PaymentsController
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
@@ -34,9 +35,10 @@ class OSPayments : CordovaImplementation() {
     private lateinit var googlePayManager: GooglePayManager
     private lateinit var paymentsController: PaymentsController
     private lateinit var googlePlayHelper: GooglePlayHelper
+    private lateinit var stripeWrapper: OSPMTStripeWrapper
 
     //to delete
-    private lateinit var paymentDetailsForStripe: PaymentDetails
+    private lateinit var paymentDetailsForPSP: PaymentDetails
 
     val gson by lazy { Gson() }
 
@@ -57,7 +59,8 @@ class OSPayments : CordovaImplementation() {
         super.initialize(cordova, webView)
         googlePayManager = GooglePayManager(getActivity())
         googlePlayHelper = GooglePlayHelper()
-        paymentsController = PaymentsController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper)
+        stripeWrapper = OSPMTStripeWrapper()
+        paymentsController = PaymentsController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper, stripeWrapper)
     }
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
@@ -108,7 +111,7 @@ class OSPayments : CordovaImplementation() {
 
         //to delete
         if (paymentDetails != null) {
-            paymentDetailsForStripe = paymentDetails
+            paymentDetailsForPSP = paymentDetails
         }
 
         if(paymentDetails != null){
@@ -124,102 +127,13 @@ class OSPayments : CordovaImplementation() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
         super.onActivityResult(requestCode, resultCode, intent)
-        paymentsController.handleActivityResult(requestCode, resultCode, intent,
-            { jsonResult, paymentResponse ->
-                //call stripe sdk with GooglePay payment info
-                processPaymentStripe(jsonResult,
-                    {
-                        sendPluginResult(paymentResponse, null)
-                    },
-                    { error ->
-                        sendPluginResult(null, Pair(formatErrorCode(error.code), error.description))
-                    }
-                )
+        paymentsController.handleActivityResult(getActivity(), paymentDetailsForPSP, requestCode, resultCode, intent,
+            {paymentResponse ->
+                sendPluginResult(paymentResponse, null)
             },
             {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
             })
-    }
-
-    private fun processPaymentStripe(googlePayObject: JSONObject?, onSuccess: (Boolean) -> Unit, onError : (PaymentsError) -> Unit) {
-
-        val stripe = Stripe(
-            getActivity(),
-            "pk_test_51KvKHLI1WLTTyI34CsVnUY8UoKGVpeklyySXSMhucxD2fViPCE7kW7KUqZoULMtqav1h2kkaESWeQCAqXLKnszEq00mFN2SGup",
-            null,
-            true, //should be false when in production
-            emptySet()
-        )
-
-        try {
-            if(googlePayObject != null) {
-                val params = PaymentMethodCreateParams.createFromGooglePay(googlePayObject)
-                stripe.createPaymentMethod(
-                    params,
-                    callback = object : ApiResultCallback<PaymentMethod> {
-                        override fun onSuccess(result: PaymentMethod) {
-                            // handle success
-                            sendToServer(result,
-                                {
-                                    onSuccess(true)
-                                },
-                                {
-                                    onError(it)
-                                }
-                            )
-                        }
-                        override fun onError(e: Exception) {
-                            onError(PaymentsError.PAYMENT_GENERAL_ERROR) // use general error for now, as this is a PoC
-                        }
-                    }
-                )
-            }
-        }
-        catch (e: Exception){
-            onError(PaymentsError.PAYMENT_GENERAL_ERROR) // use general error for now, as this is a PoC
-        }
-
-    }
-
-    private fun sendToServer(result: PaymentMethod, onSuccess: (Boolean) -> Unit, onError : (PaymentsError) -> Unit){
-
-        //create object that has a paymentMethod of type PaymentMethod and an Amount of type String, then convert it to JSON using Gson.
-        val amount = paymentDetailsForStripe.amount.multiply(BigDecimal(100)).toInt()
-        val stripePaymentRequest = StripePaymentRequest(amount, result.id!!)
-        val paymentRequestJson = Gson().toJson(stripePaymentRequest)
-
-        val url = URL("http://192.168.1.120:5000/pay")
-        val coroutine = CoroutineScope(Dispatchers.IO)
-        val openedConnection = url.openConnection()
-
-        coroutine.launch {
-            with(openedConnection as HttpURLConnection) {
-                requestMethod = "POST"
-                setRequestProperty("Content-Type", "application/json")
-                doOutput = true;
-
-                outputStream.use { os ->
-                    val input: ByteArray = paymentRequestJson.toByteArray()
-                    os.write(input, 0, input.size)
-                }
-
-                val response = StringBuffer()
-                launch {
-                    inputStream.bufferedReader().use {
-                        it.lines().forEach { line ->
-                            response.append(line)
-                        }
-                    }
-
-                    if (response.toString() == "Success!"){
-                        onSuccess(true)
-                    } else {
-                        onError(PaymentsError.PAYMENT_GENERAL_ERROR) // use general error for now, as this is a PoC
-                    }
-                }
-            }
-        }
-
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
