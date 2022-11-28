@@ -18,6 +18,9 @@ module.exports = function (context) {
     var payment_supported_card_countries = [];
     var shipping_supported_contacts = [];
     var billing_supported_contacts = [];
+    var payment_gateway = "";
+    var payment_request_url = "";
+    var stripe_publishable_key = "";
 
     var appNamePath = path.join(projectRoot, 'config.xml');
     var appNameParser = new ConfigParser(appNamePath);
@@ -71,7 +74,27 @@ module.exports = function (context) {
 
             shipping_supported_contacts = configItem.shipping_supported_contacts;
             billing_supported_contacts = configItem.billing_supported_contacts;
-            payment_supported_card_countries = configItem.payment_supported_card_countries;                    
+            payment_supported_card_countries = configItem.payment_supported_card_countries;
+
+            if (configItem.tokenization != null) {
+                if (configItem.tokenization.gateway != null && configItem.tokenization.gateway !== "") {
+                    payment_gateway = configItem.tokenization.gateway;
+                } else {
+                    error_list.push('Payment Gateway Name');
+                }
+
+                if (configItem.tokenization.requestURL != null && configItem.tokenization.requestURL !== "") {
+                    payment_request_url = configItem.tokenization.requestURL;
+                } else {
+                    error_list.push('Payment Request URL');
+                }
+
+                if (configItem.tokenization.stripePublishableKey != null && configItem.tokenization.stripePublishableKey !== "") {
+                    stripe_publishable_key = configItem.tokenization.stripePublishableKey;
+                } else if (payment_gateway.toLowerCase() === "stripe") {
+                    error_list.push('Stripe\'s Publishable Key');
+                }
+            }                   
         
             if (error_list.length > 0) {
                 throw new Error("Configuration is missing the following fields: " + error_list);
@@ -95,6 +118,19 @@ module.exports = function (context) {
     infoPlist['ApplePayPaymentSupportedCardCountries'] = payment_supported_card_countries;
     infoPlist['ApplePayShippingSupportedContacts'] = shipping_supported_contacts;
     infoPlist['ApplePayBillingSupportedContacts'] = billing_supported_contacts;
+    if (payment_gateway !== "") {
+        infoPlist['ApplePayPaymentGateway']['ApplePayPaymentGatewayName'] = payment_gateway;    
+
+        if (payment_request_url !== "") {
+            infoPlist['ApplePayPaymentGateway']['ApplePayRequestURL'] = payment_request_url;    
+        }
+
+        if (stripe_publishable_key !== "") {
+            infoPlist['ApplePayPaymentGateway']['ApplePayStripePublishableKey'] = stripe_publishable_key;    
+        }
+    } else {
+        delete infoPlist['ApplePayPaymentGateway'];
+    }
 
     fs.writeFileSync(infoPlistPath, plist.build(infoPlist, { indent: '\t' }));
 

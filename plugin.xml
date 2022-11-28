@@ -99,6 +99,19 @@
          <array>APPLE_PAY_BILLING_SUPPORTED_CONTACTS</array>
     </config-file>
 
+    <config-file target="*-Info.plist" parent="ApplePayPaymentGateway">
+        <dict>
+          <key>ApplePayPaymentGatewayName</key>
+          <string>APPLE_PAY_PAYMENT_GATEWAY_NAME</string>
+
+          <key>ApplePayRequestURL</key>
+          <string>APPLE_PAY_PAYMENT_REQUEST_URL</string>
+
+          <key>ApplePayStripePublishableKey</key>
+          <string>APPLE_PAY_PAYMENT_STRIPE_PUBLISHABLE_KEY</string>
+        </dict>
+    </config-file>
+
     <!-- iOS Source Files -->
     <source-file src="src/ios/OSPayments.swift"/>
 
@@ -109,6 +122,7 @@
         <pods use-frameworks="true">
             <pod name="OSCommonPluginLib" spec="1.0.0" />
             <!--pod name="OSPaymentsPluginLib" spec="1.1.0" /-->
+            <pod name="OSPaymentsPluginLib" git="https://github.com/OutSystems/OSPaymentsLib-iOS.git" branch="development" />
         </pods>
     </podspec>
 
