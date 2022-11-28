@@ -8,32 +8,20 @@ import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.GooglePayManager
 import com.outsystems.plugins.payments.controller.GooglePlayHelper
 import com.outsystems.plugins.payments.controller.OSPMTStripeWrapper
-import com.outsystems.plugins.payments.controller.PaymentsController
+import com.outsystems.plugins.payments.controller.OSPMTController
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
-import com.outsystems.plugins.payments.model.PaymentsError
-import com.outsystems.plugins.payments.model.StripePaymentRequest
-import com.stripe.android.ApiResultCallback
-import com.stripe.android.Stripe
-import com.stripe.android.model.PaymentMethod
-import com.stripe.android.model.PaymentMethodCreateParams
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.outsystems.plugins.payments.model.OSPMTError
 import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
-import org.json.JSONObject
-import java.math.BigDecimal
-import java.net.HttpURLConnection
-import java.net.URL
 
 class OSPayments : CordovaImplementation() {
 
     override var callbackContext: CallbackContext? = null
     private lateinit var googlePayManager: GooglePayManager
-    private lateinit var paymentsController: PaymentsController
+    private lateinit var paymentsController: OSPMTController
     private lateinit var googlePlayHelper: GooglePlayHelper
     private lateinit var stripeWrapper: OSPMTStripeWrapper
 
@@ -59,8 +47,10 @@ class OSPayments : CordovaImplementation() {
         super.initialize(cordova, webView)
         googlePayManager = GooglePayManager(getActivity())
         googlePlayHelper = GooglePlayHelper()
-        stripeWrapper = OSPMTStripeWrapper()
-        paymentsController = PaymentsController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper, stripeWrapper)
+        stripeWrapper = OSPMTStripeWrapper(
+            "pk_test_51KvKHLI1WLTTyI34CsVnUY8UoKGVpeklyySXSMhucxD2fViPCE7kW7KUqZoULMtqav1h2kkaESWeQCAqXLKnszEq00mFN2SGup",
+            "http://192.168.1.120:5000/pay")
+        paymentsController = OSPMTController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper, stripeWrapper)
     }
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
@@ -121,7 +111,7 @@ class OSPayments : CordovaImplementation() {
             }
         }
         else{
-            sendPluginResult(null, Pair(formatErrorCode(PaymentsError.INVALID_PAYMENT_DETAILS.code), PaymentsError.INVALID_PAYMENT_DETAILS.description))
+            sendPluginResult(null, Pair(formatErrorCode(OSPMTError.INVALID_PAYMENT_DETAILS.code), OSPMTError.INVALID_PAYMENT_DETAILS.description))
         }
     }
 
