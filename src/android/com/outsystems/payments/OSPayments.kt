@@ -48,6 +48,7 @@ class OSPayments : CordovaImplementation() {
         googlePayManager = GooglePayManager(getActivity())
         googlePlayHelper = GooglePlayHelper()
         stripeWrapper = OSPMTStripeWrapper(
+            //these parameters need to be obtained from the strings.xml file, and they will be inserted there by the hook
             "pk_test_51KvKHLI1WLTTyI34CsVnUY8UoKGVpeklyySXSMhucxD2fViPCE7kW7KUqZoULMtqav1h2kkaESWeQCAqXLKnszEq00mFN2SGup",
             "http://192.168.1.120:5000/pay")
         paymentsController = OSPMTController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper, stripeWrapper)
