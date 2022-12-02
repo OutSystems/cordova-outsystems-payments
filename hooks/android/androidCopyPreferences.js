@@ -90,7 +90,7 @@ module.exports = function (context) {
             if(configItem.tokenization){
                 configItem.tokenization.forEach(function(pspInfo) {
                     gateway = pspInfo.gateway;
-                    backend_url = pspInfo.backendURL;
+                    backend_url = pspInfo.requestURL;
                     if(gateway.toUpperCase() == "STRIPE"){
                         stripe_version = pspInfo.stripeVersion;
                         stripe_pub_key = pspInfo.stripePublishableKey;
