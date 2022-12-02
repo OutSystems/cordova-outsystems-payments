@@ -33,7 +33,11 @@
       <string name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string>
       <string name="shipping_country_codes">SHIPPING_COUNTRY_CODES</string>
       <string name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string>
-      <string name="tokenization">TOKENIZATION</string>
+      <string name="gateway">GATEWAY</string>
+      <string name="backend_url">BACKEND_URL</string>
+      <string name="gateway_merchant_id">GATEWAY_MERCHANT_ID</string>
+      <string name="stripe_version">STRIPE_VERSION</string>
+      <string name="stripe_pub_key">STRIPE_PUB_KEY</string>
     </config-file>
 
     <source-file src="src/android/com/outsystems/payments/OSPayments.kt" target-dir="app/src/main/kotlin/com/outsystems/payments"/>
