@@ -31,7 +31,8 @@ apply plugin: 'kotlin-kapt'
 dependencies {
     implementation("com.github.outsystems:oscore-android:1.1.0@aar")
     implementation("com.github.outsystems:oscordova-android:1.1.0@aar")
-    implementation("com.github.outsystems:ospayments-android:1.0.0@aar")
+    //implementation("com.github.outsystems:ospayments-android:1.0.0@aar")
+    implementation (name:'OSPaymentsLib', ext:'aar')
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "com.google.android.gms:play-services-wallet:19.1.0"
