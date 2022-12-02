@@ -88,17 +88,15 @@ module.exports = function (context) {
             }
 
             if(configItem.tokenization){
-                configItem.tokenization.forEach(function(pspInfo) {
-                    gateway = pspInfo.gateway;
-                    backend_url = pspInfo.requestURL;
-                    if(gateway.toUpperCase() == "STRIPE"){
-                        stripe_version = pspInfo.stripeVersion;
-                        stripe_pub_key = pspInfo.stripePublishableKey;
-                    }
-                    else{
-                        gateway_merchant_id = pspInfo.gatewayMerchantId;
-                    }
-                });
+                gateway = configItem.tokenization.gateway;
+                backend_url = configItem.tokenization.requestURL;
+                if(gateway.toUpperCase() == "STRIPE"){
+                    stripe_version = configItem.tokenization.stripeVersion;
+                    stripe_pub_key = configItem.tokenization.stripePublishableKey;
+                }
+                else{
+                    gateway_merchant_id = configItem.tokenization.gatewayMerchantId;
+                }
             }
             else{
                 error_list.push('PSP information');
