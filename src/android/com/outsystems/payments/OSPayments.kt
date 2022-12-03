@@ -3,16 +3,17 @@ package com.outsystems.payments
 import android.app.Activity
 import android.content.Intent
 import com.google.gson.Gson
-import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.GooglePayManager
 import com.outsystems.plugins.payments.controller.GooglePlayHelper
-import com.outsystems.plugins.payments.controller.OSPMTStripeWrapper
 import com.outsystems.plugins.payments.controller.OSPMTController
+import com.outsystems.plugins.payments.controller.OSPMTStripeWrapper
+import com.outsystems.plugins.payments.model.OSPMTError
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
-import com.outsystems.plugins.payments.model.OSPMTError
+import com.outsystems.plugins.payments.model.Tokenization
 import kotlinx.coroutines.runBlocking
+import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
@@ -40,7 +41,11 @@ class OSPayments : CordovaImplementation() {
         private const val SHIPPING_SUPPORTED_CONTACTS = "shipping_supported_contacts"
         private const val SHIPPING_COUNTRY_CODES = "shipping_country_codes"
         private const val BILLING_SUPPORTED_CONTACTS = "billing_supported_contacts"
-        private const val TOKENIZATION = "tokenization"
+        private const val GATEWAY = "gateway"
+        private const val BACKEND_URL = "backend_url"
+        private const val GATEWAY_MERCHANT_ID = "gateway_merchant_id"
+        private const val STRIPE_VERSION = "stripe_version"
+        private const val STRIPE_PUB_KEY = "stripe_pub_key"
     }
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
@@ -153,7 +158,13 @@ class OSPayments : CordovaImplementation() {
             if(shippingContacts.isNotEmpty() && shippingContacts[0].isNotEmpty()) shippingContacts else listOf(),
             if(shippingCountries.isNotEmpty() && shippingCountries[0].isNotEmpty()) shippingCountries else listOf(),
             if(billingContacts.isNotEmpty() && billingContacts[0].isNotEmpty()) billingContacts else listOf(),
-            activity.getString(getStringResourceId(activity, TOKENIZATION))
+            Tokenization(
+                activity.getString(getStringResourceId(activity, GATEWAY)),
+                activity.getString(getStringResourceId(activity, BACKEND_URL)),
+                activity.getString(getStringResourceId(activity, GATEWAY_MERCHANT_ID)),
+                activity.getString(getStringResourceId(activity, STRIPE_VERSION)),
+                activity.getString(getStringResourceId(activity, STRIPE_PUB_KEY))
+            )
         )
     }
 
