@@ -7,7 +7,6 @@ import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.GooglePayManager
 import com.outsystems.plugins.payments.controller.GooglePlayHelper
 import com.outsystems.plugins.payments.controller.OSPMTController
-import com.outsystems.plugins.payments.controller.OSPMTStripeWrapper
 import com.outsystems.plugins.payments.model.OSPMTError
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
@@ -24,10 +23,9 @@ class OSPayments : CordovaImplementation() {
     private lateinit var googlePayManager: GooglePayManager
     private lateinit var paymentsController: OSPMTController
     private lateinit var googlePlayHelper: GooglePlayHelper
-    private lateinit var stripeWrapper: OSPMTStripeWrapper
 
     //to delete
-    private lateinit var paymentDetailsForPSP: PaymentDetails
+    private var paymentDetails: PaymentDetails? = null
 
     val gson by lazy { Gson() }
 
@@ -99,15 +97,10 @@ class OSPayments : CordovaImplementation() {
     private fun setDetailsAndTriggerPayment(args: JSONArray){
         setAsActivityResultCallback()
 
-        val paymentDetails = buildPaymentDetails(args)
-
-        //to delete
-        if (paymentDetails != null) {
-            paymentDetailsForPSP = paymentDetails
-        }
+        paymentDetails = buildPaymentDetails(args)
 
         if(paymentDetails != null){
-            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails
+            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails!!
             ) {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
             }
@@ -119,13 +112,16 @@ class OSPayments : CordovaImplementation() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
         super.onActivityResult(requestCode, resultCode, intent)
-        paymentsController.handleActivityResult(getActivity(), paymentDetailsForPSP, requestCode, resultCode, intent,
-            {paymentResponse ->
-                sendPluginResult(paymentResponse, null)
-            },
-            {
-                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
-            })
+        paymentDetails?.let {
+            paymentsController.handleActivityResult(getActivity(),
+                it, requestCode, resultCode, intent,
+                {paymentResponse ->
+                    sendPluginResult(paymentResponse, null)
+                },
+                {error ->
+                    sendPluginResult(null, Pair(formatErrorCode(error.code), error.description))
+                })
+        }
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
