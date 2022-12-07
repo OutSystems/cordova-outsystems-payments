@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import com.google.gson.Gson
 import com.outsystems.plugins.oscordova.CordovaImplementation
-import com.outsystems.plugins.payments.controller.GooglePayManager
-import com.outsystems.plugins.payments.controller.GooglePlayHelper
+import com.outsystems.plugins.payments.controller.OSPMTGooglePayManager
+import com.outsystems.plugins.payments.controller.OSPMTGooglePlayHelper
 import com.outsystems.plugins.payments.controller.OSPMTController
 import com.outsystems.plugins.payments.model.OSPMTError
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
@@ -20,9 +20,9 @@ import org.json.JSONArray
 class OSPayments : CordovaImplementation() {
 
     override var callbackContext: CallbackContext? = null
-    private lateinit var googlePayManager: GooglePayManager
+    private lateinit var googlePayManager: OSPMTGooglePayManager
     private lateinit var paymentsController: OSPMTController
-    private lateinit var googlePlayHelper: GooglePlayHelper
+    private lateinit var googlePlayHelper: OSPMTGooglePlayHelper
 
     //to delete
     private var paymentDetails: PaymentDetails? = null
@@ -48,8 +48,8 @@ class OSPayments : CordovaImplementation() {
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
         super.initialize(cordova, webView)
-        googlePayManager = GooglePayManager(getActivity())
-        googlePlayHelper = GooglePlayHelper()
+        googlePayManager = OSPMTGooglePayManager(getActivity())
+        googlePlayHelper = OSPMTGooglePlayHelper()
         paymentsController = OSPMTController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper)
     }
 
