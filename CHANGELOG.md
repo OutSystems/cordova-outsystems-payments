@@ -8,6 +8,9 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+## 07-12-2022
+Android - implemented payment processing using Stripe (https://outsystemsrd.atlassian.net/browse/RMET-2079)
+
 - Fix: [Android] Use fixed versions instead of dynamic ones. (https://outsystemsrd.atlassian.net/browse/RMET-2045)
 
 ## [Version 1.0.1]
