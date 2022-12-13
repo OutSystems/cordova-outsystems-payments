@@ -8,6 +8,10 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+### 2022-12-02
+- Chore: [iOS] Remove all the `OSPaymentsLib` files and replace them by the new `OSPaymentsPluginLib` pod.
+- Feat: [iOS] Update hook so that it checks if Stripe's is configured as the Payment Service Provider and update `plist` file accordingly (https://outsystemsrd.atlassian.net/browse/RMET-2078).
+
 ## [Version 1.0.1]
 
 ### 2022-11-08
