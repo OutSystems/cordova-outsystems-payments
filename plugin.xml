@@ -99,33 +99,20 @@
          <array>APPLE_PAY_BILLING_SUPPORTED_CONTACTS</array>
     </config-file>
 
+    <config-file target="*-Info.plist" parent="ApplePayPaymentGateway">
+        <dict>
+          <key>ApplePayPaymentGatewayName</key>
+          <string>APPLE_PAY_PAYMENT_GATEWAY_NAME</string>
+
+          <key>ApplePayRequestURL</key>
+          <string>APPLE_PAY_PAYMENT_REQUEST_URL</string>
+
+          <key>ApplePayStripePublishableKey</key>
+          <string>APPLE_PAY_PAYMENT_STRIPE_PUBLISHABLE_KEY</string>
+        </dict>
+    </config-file>
+
     <!-- iOS Source Files -->
-    <source-file src="src/ios/Error/OSPMTError.swift" />
-
-    <source-file src="src/ios/Extensions/PKContactField+Adapter.swift" />
-    <source-file src="src/ios/Extensions/PKMerchantCapability+Adapter.swift" />
-    <source-file src="src/ios/Extensions/PKPassLibrary+Adapter.swift" />
-    <source-file src="src/ios/Extensions/PKPayment+Adapter.swift" />
-    <source-file src="src/ios/Extensions/PKPaymentAuthorizationController+Adapter.swift" />
-    <source-file src="src/ios/Extensions/PKPaymentNetwork+Adapter.swift" />
-
-    <source-file src="src/ios/Models/OSPMTAddressModel.swift" />
-    <source-file src="src/ios/Models/OSPMTConfigurationModel.swift" />
-    <source-file src="src/ios/Models/OSPMTContactInfoModel.swift" />
-    <source-file src="src/ios/Models/OSPMTDataModel.swift" />
-    <source-file src="src/ios/Models/OSPMTDetailsModel.swift" />
-    <source-file src="src/ios/Models/OSPMTScopeModel.swift" />
-    <source-file src="src/ios/Models/OSPMTTokenInfoModel.swift" />
-
-    <source-file src="src/ios/Protocols/OSPMTActionDelegate.swift" />
-    <source-file src="src/ios/Protocols/OSPMTAvailabilityDelegate.swift" />
-    <source-file src="src/ios/Protocols/OSPMTCallbackDelegate.swift" />
-    <source-file src="src/ios/Protocols/OSPMTHandlerDelegate.swift" />
-    <source-file src="src/ios/Protocols/OSPMTRequestDelegate.swift" />
-
-    <source-file src="src/ios/OSPMTApplePayHandler.swift" />
-    <source-file src="src/ios/OSPMTPayments.swift" />
-
     <source-file src="src/ios/OSPayments.swift"/>
 
     <podspec>
@@ -134,6 +121,8 @@
         </config>
         <pods use-frameworks="true">
             <pod name="OSCommonPluginLib" spec="1.0.0" />
+            <!--pod name="OSPaymentsPluginLib" spec="1.1.0" /-->
+            <pod name="OSPaymentsPluginLib" git="https://github.com/OutSystems/OSPaymentsLib-iOS.git" branch="development" />
         </pods>
     </podspec>
 
