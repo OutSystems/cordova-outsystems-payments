@@ -8,6 +8,9 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+## 16-12-2022
+Android - remove dependency to jcenter (https://outsystemsrd.atlassian.net/browse/RMET-2036)
+
 ## 07-12-2022
 Android - implemented payment processing using Stripe (https://outsystemsrd.atlassian.net/browse/RMET-2079)
 
