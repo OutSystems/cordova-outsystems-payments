@@ -3,15 +3,16 @@ package com.outsystems.payments
 import android.app.Activity
 import android.content.Intent
 import com.google.gson.Gson
-import org.apache.cordova.CallbackContext
 import com.outsystems.plugins.oscordova.CordovaImplementation
-import com.outsystems.plugins.payments.controller.GooglePayManager
-import com.outsystems.plugins.payments.controller.GooglePlayHelper
-import com.outsystems.plugins.payments.controller.PaymentsController
+import com.outsystems.plugins.payments.controller.OSPMTGooglePayManager
+import com.outsystems.plugins.payments.controller.OSPMTGooglePlayHelper
+import com.outsystems.plugins.payments.controller.OSPMTController
+import com.outsystems.plugins.payments.model.OSPMTError
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
-import com.outsystems.plugins.payments.model.PaymentsError
+import com.outsystems.plugins.payments.model.Tokenization
 import kotlinx.coroutines.runBlocking
+import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
@@ -19,9 +20,12 @@ import org.json.JSONArray
 class OSPayments : CordovaImplementation() {
 
     override var callbackContext: CallbackContext? = null
-    private lateinit var googlePayManager: GooglePayManager
-    private lateinit var paymentsController: PaymentsController
-    private lateinit var googlePlayHelper: GooglePlayHelper
+    private lateinit var googlePayManager: OSPMTGooglePayManager
+    private lateinit var paymentsController: OSPMTController
+    private lateinit var googlePlayHelper: OSPMTGooglePlayHelper
+
+    //to delete
+    private var paymentDetails: PaymentDetails? = null
 
     val gson by lazy { Gson() }
 
@@ -35,14 +39,18 @@ class OSPayments : CordovaImplementation() {
         private const val SHIPPING_SUPPORTED_CONTACTS = "shipping_supported_contacts"
         private const val SHIPPING_COUNTRY_CODES = "shipping_country_codes"
         private const val BILLING_SUPPORTED_CONTACTS = "billing_supported_contacts"
-        private const val TOKENIZATION = "tokenization"
+        private const val GATEWAY = "gateway"
+        private const val BACKEND_URL = "backend_url"
+        private const val GATEWAY_MERCHANT_ID = "gateway_merchant_id"
+        private const val STRIPE_VERSION = "stripe_version"
+        private const val STRIPE_PUB_KEY = "stripe_pub_key"
     }
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
         super.initialize(cordova, webView)
-        googlePayManager = GooglePayManager(getActivity())
-        googlePlayHelper = GooglePlayHelper()
-        paymentsController = PaymentsController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper)
+        googlePayManager = OSPMTGooglePayManager(getActivity())
+        googlePlayHelper = OSPMTGooglePlayHelper()
+        paymentsController = OSPMTController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper)
     }
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
@@ -89,27 +97,27 @@ class OSPayments : CordovaImplementation() {
     private fun setDetailsAndTriggerPayment(args: JSONArray){
         setAsActivityResultCallback()
 
-        val paymentDetails = buildPaymentDetails(args)
+        paymentDetails = buildPaymentDetails(args)
 
         if(paymentDetails != null){
-            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails
+            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails!!
             ) {
                 sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
             }
         }
         else{
-            sendPluginResult(null, Pair(formatErrorCode(PaymentsError.INVALID_PAYMENT_DETAILS.code), PaymentsError.INVALID_PAYMENT_DETAILS.description))
+            sendPluginResult(null, Pair(formatErrorCode(OSPMTError.INVALID_PAYMENT_DETAILS.code), OSPMTError.INVALID_PAYMENT_DETAILS.description))
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
         super.onActivityResult(requestCode, resultCode, intent)
         paymentsController.handleActivityResult(requestCode, resultCode, intent,
-            {
-                sendPluginResult(it, null)
+            { paymentResponse ->
+                sendPluginResult(paymentResponse, null)
             },
-            {
-                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
+            { error ->
+                sendPluginResult(null, Pair(formatErrorCode(error.code), error.description))
             })
     }
 
@@ -143,7 +151,13 @@ class OSPayments : CordovaImplementation() {
             if(shippingContacts.isNotEmpty() && shippingContacts[0].isNotEmpty()) shippingContacts else listOf(),
             if(shippingCountries.isNotEmpty() && shippingCountries[0].isNotEmpty()) shippingCountries else listOf(),
             if(billingContacts.isNotEmpty() && billingContacts[0].isNotEmpty()) billingContacts else listOf(),
-            activity.getString(getStringResourceId(activity, TOKENIZATION))
+            Tokenization(
+                activity.getString(getStringResourceId(activity, GATEWAY)),
+                activity.getString(getStringResourceId(activity, BACKEND_URL)),
+                activity.getString(getStringResourceId(activity, GATEWAY_MERCHANT_ID)),
+                activity.getString(getStringResourceId(activity, STRIPE_VERSION)),
+                activity.getString(getStringResourceId(activity, STRIPE_PUB_KEY))
+            )
         )
     }
 

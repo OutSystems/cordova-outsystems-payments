@@ -7,6 +7,8 @@ module.exports = function (context) {
     const ServiceEnum = Object.freeze({"ApplePay":"1", "GooglePay":"2"})
     const configFileName = 'www/json-config/PaymentsPluginConfiguration.json';
 
+    var hasGooglePay = false;
+
     var merchant_name = "";
     var merchant_country_code = "";
     var payment_allowed_networks = [];
@@ -15,8 +17,13 @@ module.exports = function (context) {
     var shipping_supported_contacts = [];
     var shipping_country_codes = [];
     var billing_supported_contacts = [];
-    var tokenization = "";
-    var hasGooglePay = false;
+    var gateway = "";
+    var backend_url = "";
+    //only for PSPs other than Stripe
+    var gateway_merchant_id = "";
+    //only for stripe
+    var stripe_version = "";
+    var stripe_pub_key = "";
 
 
     var projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
@@ -81,7 +88,15 @@ module.exports = function (context) {
             }
 
             if(configItem.tokenization){
-                tokenization = JSON.stringify(configItem.tokenization);
+                gateway = configItem.tokenization.gateway;
+                backend_url = configItem.tokenization.requestURL;
+                if(gateway.toUpperCase() == "STRIPE"){
+                    stripe_version = configItem.tokenization.stripeVersion;
+                    stripe_pub_key = configItem.tokenization.stripePublishableKey;
+                }
+                else{
+                    gateway_merchant_id = configItem.tokenization.gatewayMerchantId;
+                }
             }
             else{
                 error_list.push('PSP information');
@@ -139,9 +154,29 @@ module.exports = function (context) {
             billingContactsTags[i].text = billing_supported_contacts;
         }
 
-        var tokenizationTags = etreeStrings.findall('./string[@name="tokenization"]');
-        for (var i = 0; i < tokenizationTags.length; i++) {
-            tokenizationTags[i].text = tokenization;
+        var gatewayTags = etreeStrings.findall('./string[@name="gateway"]');
+        for (var i = 0; i < gatewayTags.length; i++) {
+            gatewayTags[i].text = gateway;
+        }
+
+        var backendUrlTags = etreeStrings.findall('./string[@name="backend_url"]');
+        for (var i = 0; i < backendUrlTags.length; i++) {
+            backendUrlTags[i].text = backend_url;
+        }
+
+        var gatewayMerchantIdTags = etreeStrings.findall('./string[@name="gateway_merchant_id"]');
+        for (var i = 0; i < gatewayMerchantIdTags.length; i++) {
+            gatewayMerchantIdTags[i].text = gateway_merchant_id;
+        }
+
+        var stripeVersionTags = etreeStrings.findall('./string[@name="stripe_version"]');
+        for (var i = 0; i < stripeVersionTags.length; i++) {
+            stripeVersionTags[i].text = stripe_version;
+        }
+
+        var stripePubKeyTags = etreeStrings.findall('./string[@name="stripe_pub_key"]');
+        for (var i = 0; i < stripePubKeyTags.length; i++) {
+            stripePubKeyTags[i].text = stripe_pub_key;
         }
     
         var resultXmlStrings = etreeStrings.write();
