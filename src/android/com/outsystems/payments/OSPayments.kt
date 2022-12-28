@@ -100,10 +100,7 @@ class OSPayments : CordovaImplementation() {
         paymentDetails = buildPaymentDetails(args)
 
         if(paymentDetails != null){
-            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails!!
-            ) {
-                sendPluginResult(null, Pair(formatErrorCode(it.code), it.description))
-            }
+            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails!!)
         }
         else{
             sendPluginResult(null, Pair(formatErrorCode(OSPMTError.INVALID_PAYMENT_DETAILS.code), OSPMTError.INVALID_PAYMENT_DETAILS.description))
