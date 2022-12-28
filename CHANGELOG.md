@@ -8,6 +8,9 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+## 28-12-2022
+Android - update dependency to PaymentsLib-Android (https://outsystemsrd.atlassian.net/browse/RMET-2120)
+
 ## 16-12-2022
 Android - remove dependency to jcenter (https://outsystemsrd.atlassian.net/browse/RMET-2036)
 
