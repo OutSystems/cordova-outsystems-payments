@@ -8,6 +8,9 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+## 06-01-2023
+- Feat: [iOS] Add access token to Full Payment Process (https://outsystemsrd.atlassian.net/browse/RMET-2147).
+
 ## 04-01-2023
 Android - Add extra parameter for accessToken (https://outsystemsrd.atlassian.net/browse/RMET-2089)
 
