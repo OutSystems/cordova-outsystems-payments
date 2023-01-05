@@ -8,6 +8,9 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
+## 04-01-2023
+Android - Add extra parameter for accessToken (https://outsystemsrd.atlassian.net/browse/RMET-2089)
+
 ## 28-12-2022
 Android - update dependency to PaymentsLib-Android (https://outsystemsrd.atlassian.net/browse/RMET-2120)
 
