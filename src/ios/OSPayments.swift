@@ -28,8 +28,9 @@ class OSPayments: CDVPlugin {
     func setDetails(command: CDVInvokedUrlCommand) {
         self.callbackId = command.callbackId
         
-        guard let detailsText = command.arguments.first as? String else { return }
-        self.plugin?.set(detailsText)
+        guard let detailsText = command.argument(at: 0) as? String else { return }
+        let accessToken = command.argument(at: 1) as? String
+        self.plugin?.set(detailsText, and: accessToken)
     }
 }
 
