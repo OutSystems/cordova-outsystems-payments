@@ -125,8 +125,7 @@
         </config>
         <pods use-frameworks="true">
             <pod name="OSCommonPluginLib" spec="1.0.0" />
-            <!--pod name="OSPaymentsPluginLib" spec="1.1.0" /-->
-            <pod name="OSPaymentsPluginLib" git="https://github.com/OutSystems/OSPaymentsLib-iOS.git" branch="development" />
+            <pod name="OSPaymentsPluginLib" spec="1.1.0" />
         </pods>
     </podspec>
 
