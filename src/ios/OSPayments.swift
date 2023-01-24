@@ -1,5 +1,5 @@
 import OSCommonPluginLib
-import OSPaymentsPluginLib
+import OSPaymentsLib
 
 @objc(OSPayments)
 class OSPayments: CDVPlugin {
