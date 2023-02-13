@@ -8,8 +8,8 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
-## 09-01-2023
-- Fix: [iOS] Add `post_install` script to podfile in order to fix a XCode 14 code signing issue on Stripe's libraries.
+### 10-02-2023
+- Feat: [iOS] Make library available as `xcframework` (https://outsystemsrd.atlassian.net/browse/RMET-2280).
 
 ## 06-01-2023
 - Feat: [iOS] Add access token to Full Payment Process (https://outsystemsrd.atlassian.net/browse/RMET-2147).
