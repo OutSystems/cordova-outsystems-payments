@@ -32,6 +32,8 @@ Android - implemented payment processing using Stripe (https://outsystemsrd.atla
 - Chore: [iOS] Remove all the `OSPaymentsLib` files and replace them by the new `OSPaymentsPluginLib` pod.
 - Feat: [iOS] Update hook so that it checks if Stripe's is configured as the Payment Service Provider and update `plist` file accordingly (https://outsystemsrd.atlassian.net/browse/RMET-2078).
 
+- Fix: [Android] Use fixed versions instead of dynamic ones. (https://outsystemsrd.atlassian.net/browse/RMET-2045)
+
 ## [Version 1.0.1]
 
 ### 2022-11-08
