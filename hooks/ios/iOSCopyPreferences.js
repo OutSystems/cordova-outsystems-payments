@@ -25,11 +25,10 @@ module.exports = function (context) {
     let appNameParser = new ConfigParser(appNamePath);
     let appName = appNameParser.name();
 
-    let wwwFolder = "platforms/ios/www";    
     let platformPath = path.join(projectRoot, 'platforms/ios');
     let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);   
     if(!fs.existsSync(resourcesPath)){
-        resourcesPath = path.join(projectRoot, wwwFolder);
+        resourcesPath = path.join(projectRoot, platformPath + "/www");
     }
 
     //read json config file
