@@ -2,39 +2,42 @@ const et = require('elementtree');
 const path = require('path');
 const fs = require('fs');
 const plist = require('plist');
-const child_process = require('child_process');
 const { ConfigParser } = require('cordova-common');
-const { Console } = require('console');
 
 module.exports = function (context) {
 
     const ServiceEnum = Object.freeze({"ApplePay":"1", "GooglePay":"2"})
-    var projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
+    let projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
 
-    var merchant_id = "";
-    var merchant_name = "";
-    var merchant_country_code = "";
-    var payment_allowed_networks = [];
-    var payment_supported_capabilities = [];
-    var payment_supported_card_countries = [];
-    var shipping_supported_contacts = [];
-    var billing_supported_contacts = [];
-    var payment_gateway = "";
-    var payment_request_url = "";
-    var stripe_publishable_key = "";
+    let merchant_id = "";
+    let merchant_name = "";
+    let merchant_country_code = "";
+    let payment_allowed_networks = [];
+    let payment_supported_capabilities = [];
+    let payment_supported_card_countries = [];
+    let shipping_supported_contacts = [];
+    let billing_supported_contacts = [];
+    let payment_gateway = "";
+    let payment_request_url = "";
+    let stripe_publishable_key = "";
 
-    var appNamePath = path.join(projectRoot, 'config.xml');
-    var appNameParser = new ConfigParser(appNamePath);
-    var appName = appNameParser.name();
+    let appNamePath = path.join(projectRoot, 'config.xml');
+    let appNameParser = new ConfigParser(appNamePath);
+    let appName = appNameParser.name();
 
     let platformPath = path.join(projectRoot, 'platforms/ios');
+    let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);   
+    if(!fs.existsSync(resourcesPath)){
+        resourcesPath = path.join(projectRoot, platformPath + "/www");
+    }
 
     //read json config file
-    var jsonConfig = "";
+    let jsonConfig = "";
+    let jsonParsed;
     try {
-        jsonConfig = path.join(platformPath, 'www/json-config/PaymentsPluginConfiguration.json');
-        var jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
-        var jsonParsed = JSON.parse(jsonConfigFile);
+        jsonConfig = path.join(resourcesPath, 'json-config/PaymentsPluginConfiguration.json');
+        let jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
+        jsonParsed = JSON.parse(jsonConfigFile);
     } catch {
         throw new Error("Missing configuration file or error trying to obtain the configuration.");
     }
@@ -107,9 +110,9 @@ module.exports = function (context) {
     
 
     //Change info.plist
-    var infoPlistPath = path.join(platformPath, appName + '/'+ appName +'-info.plist');
-    var infoPlistFile = fs.readFileSync(infoPlistPath, 'utf8');
-    var infoPlist = plist.parse(infoPlistFile);
+    let infoPlistPath = path.join(platformPath, appName + '/'+ appName +'-info.plist');
+    let infoPlistFile = fs.readFileSync(infoPlistPath, 'utf8');
+    let infoPlist = plist.parse(infoPlistFile);
 
     infoPlist['ApplePayMerchantID'] = merchant_id;
     infoPlist['ApplePayMerchantName'] = merchant_name;
@@ -136,17 +139,17 @@ module.exports = function (context) {
     fs.writeFileSync(infoPlistPath, plist.build(infoPlist, { indent: '\t' }));
 
     // Change Entitlements files
-    var debugEntitlementsPath = path.join(platformPath, appName + '/'+ 'Entitlements-Debug.plist');
-    var debugEntitlementsFile = fs.readFileSync(debugEntitlementsPath, 'utf8');
-    var debugEntitlements = plist.parse(debugEntitlementsFile);
+    let debugEntitlementsPath = path.join(platformPath, appName + '/'+ 'Entitlements-Debug.plist');
+    let debugEntitlementsFile = fs.readFileSync(debugEntitlementsPath, 'utf8');
+    let debugEntitlements = plist.parse(debugEntitlementsFile);
 
     debugEntitlements['com.apple.developer.in-app-payments'] = [merchant_id];
 
     fs.writeFileSync(debugEntitlementsPath, plist.build(debugEntitlements, { indent: '\t' }));
 
-    var releaseEntitlementsPath = path.join(platformPath, appName + '/' + 'Entitlements-Release.plist');
-    var releaseEntitlementsFile = fs.readFileSync(releaseEntitlementsPath, 'utf8');
-    var releaseEntitlements = plist.parse(releaseEntitlementsFile);
+    let releaseEntitlementsPath = path.join(platformPath, appName + '/' + 'Entitlements-Release.plist');
+    let releaseEntitlementsFile = fs.readFileSync(releaseEntitlementsPath, 'utf8');
+    let releaseEntitlements = plist.parse(releaseEntitlementsFile);
 
     releaseEntitlements['com.apple.developer.in-app-payments'] = [merchant_id];
 
