@@ -28,7 +28,7 @@ module.exports = function (context) {
     let platformPath = path.join(projectRoot, 'platforms/ios');
     let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);   
     if(!fs.existsSync(resourcesPath)){
-        resourcesPath = path.join(projectRoot, platformPath + "/www");
+        resourcesPath = platformPath + "/www";
     }
 
     //read json config file
