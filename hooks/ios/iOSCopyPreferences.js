@@ -2,6 +2,7 @@ const et = require('elementtree');
 const path = require('path');
 const fs = require('fs');
 const plist = require('plist');
+const child_process = require('child_process');
 const { ConfigParser } = require('cordova-common');
 
 module.exports = function (context) {
