@@ -12,7 +12,9 @@ The changes documented here do not include those from the original repository.
 - Fix: [iOS] Fixes path, removing duplicate string (https://outsystemsrd.atlassian.net/browse/RMET-2855).
 
 ### 13-07-2023
-- Feat: Update hook to consider new resources paths (https://outsystemsrd.atlassian.net/browse/RMET-2477)
+- Feat: Update hook to consider new resources paths (https://outsystemsrd.atlassian.net/browse/RMET-2477).
+
+## [Version 1.1.0]
 
 ### 10-02-2023
 - Feat: [iOS] Make library available as `xcframework` (https://outsystemsrd.atlassian.net/browse/RMET-2280).
@@ -37,6 +39,8 @@ Android - implemented payment processing using Stripe (https://outsystemsrd.atla
 ### 2022-12-02
 - Chore: [iOS] Remove all the `OSPaymentsLib` files and replace them by the new `OSPaymentsPluginLib` pod.
 - Feat: [iOS] Update hook so that it checks if Stripe's is configured as the Payment Service Provider and update `plist` file accordingly (https://outsystemsrd.atlassian.net/browse/RMET-2078).
+
+- Fix: [Android] Use fixed versions instead of dynamic ones. (https://outsystemsrd.atlassian.net/browse/RMET-2045)
 
 ## [Version 1.0.1]
 
