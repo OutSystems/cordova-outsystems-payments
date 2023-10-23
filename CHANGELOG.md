@@ -8,13 +8,6 @@ The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
 
-- Chore: Update cordova hooks with new OutSystems specific errors. (https://outsystemsrd.atlassian.net/browse/RMET-3311)
-
-## [Version 1.1.2]
-
-### 21-12-2023
-- Fix: [Android] Updates dependency to OSCore and OSCordova (https://outsystemsrd.atlassian.net/browse/RMET-2993).
-
 ## [Version 1.1.1]
 
 ### 03-10-2023
