@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
-## [Unreleased]
+## [Version 1.1.2]
 
 ### 21-12-2023
 - Fix: [Android] Updates dependency to OSCore and OSCordova (https://outsystemsrd.atlassian.net/browse/RMET-2993).
+
+## [Version 1.1.1]
 
 ### 03-10-2023
 - Fix: [iOS] Fixes path, removing duplicate string (https://outsystemsrd.atlassian.net/browse/RMET-2855).
