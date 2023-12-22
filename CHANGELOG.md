@@ -19,6 +19,14 @@ The changes documented here do not include those from the original repository.
 ### 13-07-2023
 - Feat: Update hook to consider new resources paths (https://outsystemsrd.atlassian.net/browse/RMET-2477).
 
+## [Version 1.1.1]
+
+### 03-10-2023
+- Fix: [iOS] Fixes path, removing duplicate string (https://outsystemsrd.atlassian.net/browse/RMET-2855).
+
+### 13-07-2023
+- Feat: Update hook to consider new resources paths (https://outsystemsrd.atlassian.net/browse/RMET-2477).
+
 ## [Version 1.1.0]
 
 ### 10-02-2023
