@@ -107,15 +107,17 @@ class OSPayments : CordovaImplementation() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
-        paymentsController.handleActivityResult(requestCode, resultCode, intent,
-            { paymentResponse ->
-                sendPluginResult(paymentResponse, null)
-            },
-            { error ->
-                sendPluginResult(null, Pair(formatErrorCode(error.code), error.description))
-            })
+        if (intent != null) {
+            paymentsController.handleActivityResult(requestCode, resultCode, intent,
+                { paymentResponse ->
+                    sendPluginResult(paymentResponse, null)
+                },
+                { error ->
+                    sendPluginResult(null, Pair(formatErrorCode(error.code), error.description))
+                })
+        }
     }
 
     override fun onRequestPermissionResult(requestCode: Int,
