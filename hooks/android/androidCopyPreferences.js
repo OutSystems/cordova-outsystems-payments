@@ -41,13 +41,13 @@ module.exports = function (context) {
         jsonParsed = JSON.parse(jsonConfigFile);
     }
     catch {
-        throw new Error("Missing configuration file or error trying to obtain the configuration.");
+        throw new Error("OUTSYSTEMS_PLUGIN_ERROR: Missing configuration file or error trying to obtain the configuration.");
     }
 
-    jsonParsed.app_configurations.forEach(function(configItem) {
+    jsonParsed.app_configurations.forEach((configItem) => {
         if (configItem.service_id == ServiceEnum.GooglePay) {
             hasGooglePay = true;
-            var error_list = [];
+            let error_list = [];
 
             if(configItem.merchant_name && configItem.merchant_name !== ""){
                 merchant_name = configItem.merchant_name;
@@ -109,9 +109,9 @@ module.exports = function (context) {
             }
 
             if (error_list.length > 0) {
-                throw new Error("The following fields are either missing or empty in the configuration: " + error_list);
+                console.error("Missing fields: " + error_list);
+                throw new Error("OUTSYSTEMS_PLUGIN_ERROR: Payments configuration is missing some fields. Please check build logs to know more.");
             }
-            return;
         }
     });
 

@@ -40,12 +40,12 @@ module.exports = function (context) {
         let jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
         jsonParsed = JSON.parse(jsonConfigFile);
     } catch {
-        throw new Error("Missing configuration file or error trying to obtain the configuration.");
+        throw new Error("OUTSYSTEMS_PLUGIN_ERROR: Missing configuration file or error trying to obtain the configuration.");
     }
     
-    jsonParsed.app_configurations.forEach(function(configItem) {
+    jsonParsed.app_configurations.forEach((configItem) => {
         if (configItem.service_id == ServiceEnum.ApplePay) {
-            var error_list = [];
+            let error_list = [];
             
             if (configItem.merchant_id != null && configItem.merchant_id !== "") {
                 merchant_id = configItem.merchant_id;
@@ -102,10 +102,9 @@ module.exports = function (context) {
             }                   
         
             if (error_list.length > 0) {
-                throw new Error("Configuration is missing the following fields: " + error_list);
+                console.error("Missing fields: " + error_list);
+                throw new Error("OUTSYSTEMS_PLUGIN_ERROR: Payments configuration is missing some fields. Please check build logs to know more.");
             }
-
-            return;
         }
     });
     
