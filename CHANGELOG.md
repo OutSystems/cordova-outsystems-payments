@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The changes documented here do not include those from the original repository.
 
 ## [Unreleased]
+### Chores
+- Update the iOS framework. This adds the Privacy Manifest file (https://outsystemsrd.atlassian.net/browse/RMET-3283).
+- Update cordova hooks with new OutSystems specific errors. (https://outsystemsrd.atlassian.net/browse/RMET-3311)
+
+## [Version 1.1.2]
+
+### 21-12-2023
+- Fix: [Android] Updates dependency to OSCore and OSCordova (https://outsystemsrd.atlassian.net/browse/RMET-2993).
+
+## [Version 1.1.1]
+
+### 03-10-2023
+- Fix: [iOS] Fixes path, removing duplicate string (https://outsystemsrd.atlassian.net/browse/RMET-2855).
+
+### 13-07-2023
+- Feat: Update hook to consider new resources paths (https://outsystemsrd.atlassian.net/browse/RMET-2477).
 
 - Chore: Update cordova hooks with new OutSystems specific errors. (https://outsystemsrd.atlassian.net/browse/RMET-3311)
 
