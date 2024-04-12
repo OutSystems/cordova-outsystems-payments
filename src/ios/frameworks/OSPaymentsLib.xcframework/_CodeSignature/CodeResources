@@ -10,7 +10,7 @@
 		</data>
 		<key>ios-arm64/OSPaymentsLib.framework/Info.plist</key>
 		<data>
-		QHUeFiql4dXTf2MmFTg6/H+HvYk=
+		fXHT29p/t/MlNiMHbfjrwgICThg=
 		</data>
 		<key>ios-arm64/OSPaymentsLib.framework/Modules/OSPaymentsLib.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/Info.plist</key>
 		<data>
-		IrUfwRkHbCqBit+suRopEJPu7mc=
+		el3T5yS7Ms+s91JVUULwR63z6fM=
 		</data>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/Modules/OSPaymentsLib.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -86,7 +86,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/OSPaymentsLib</key>
 		<data>
-		Q28BteDGwk0WTpl1y9HjAWTlA4k=
+		Hk0MU+DuAGoyrEITxZEM2K3CB4U=
 		</data>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/PrivacyInfo.xcprivacy</key>
 		<data>
@@ -94,7 +94,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/_CodeSignature/CodeResources</key>
 		<data>
-		i7IfqSkb2Vb1PGEVKsJ+h1I4YFI=
+		QVc/z4DwoapLlPS1CgEO+VFEchY=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -114,11 +114,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			QHUeFiql4dXTf2MmFTg6/H+HvYk=
+			fXHT29p/t/MlNiMHbfjrwgICThg=
 			</data>
 			<key>hash2</key>
 			<data>
-			jihRd1XLe8f1H5d+WanAJl3Iu9XGkjqUUjWu+pQQuqs=
+			9zoU6XWEhXTV3IYi2fZV8ssIAlNfWclg7gy8NzlRDBk=
 			</data>
 		</dict>
 		<key>ios-arm64/OSPaymentsLib.framework/Modules/OSPaymentsLib.swiftmodule/arm64-apple-ios.abi.json</key>
@@ -213,11 +213,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			IrUfwRkHbCqBit+suRopEJPu7mc=
+			el3T5yS7Ms+s91JVUULwR63z6fM=
 			</data>
 			<key>hash2</key>
 			<data>
-			H1u5U3sL0tP0pfU9IVRiTJw6/zqXtI0l7pkm0J8057U=
+			BDGqzVAbDDfNpvv6BDJaDDANOBRCM6G9MrzSO6p9yks=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/Modules/OSPaymentsLib.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -323,11 +323,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Q28BteDGwk0WTpl1y9HjAWTlA4k=
+			Hk0MU+DuAGoyrEITxZEM2K3CB4U=
 			</data>
 			<key>hash2</key>
 			<data>
-			xUjrBxlTyXdE9vpTtrkmviusgBWIQF/JVMYreI738vM=
+			LlSnoxdM100O9hLHFnkbEU1EunXgK/pmnGgFcE6lI9o=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/OSPaymentsLib.framework/PrivacyInfo.xcprivacy</key>
@@ -345,11 +345,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			i7IfqSkb2Vb1PGEVKsJ+h1I4YFI=
+			QVc/z4DwoapLlPS1CgEO+VFEchY=
 			</data>
 			<key>hash2</key>
 			<data>
-			dHXL6+mYcQrJ7+vpFrn7FjWkYszTLrt7bxT+nj0ygOY=
+			Dyq2kzqKHSK2Hz4eOafihB8l6RVyw38tLywqIcc3+7E=
 			</data>
 		</dict>
 	</dict>
