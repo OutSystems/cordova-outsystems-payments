@@ -126,6 +126,10 @@ class OSPayments : CordovaImplementation() {
         // Does nothing. These permissions are not required on Android.
     }
 
+    override fun onResume(multitasking: Boolean) {
+        // Not used in this project.
+    }
+
     override fun areGooglePlayServicesAvailable(): Boolean {
         // Not used in this project.
         return false
