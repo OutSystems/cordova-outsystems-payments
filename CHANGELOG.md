@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.1
+
+- Fix: [Android] Updates dependency to OSCordova (https://outsystemsrd.atlassian.net/browse/RPM-5093)
+
 ## 1.2.0
 
 ### Features
