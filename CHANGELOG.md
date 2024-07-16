@@ -8,6 +8,7 @@ The changes documented here do not include those from the original repository.
 
 ## 1.2.1
 
+### Fixes
 - Fix: [Android] Updates dependency to OSCordova (https://outsystemsrd.atlassian.net/browse/RPM-5093)
 
 ## 1.2.0
