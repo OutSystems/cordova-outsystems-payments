@@ -11,7 +11,6 @@ import com.outsystems.plugins.payments.model.OSPMTError
 import com.outsystems.plugins.payments.model.PaymentConfigurationInfo
 import com.outsystems.plugins.payments.model.PaymentDetails
 import com.outsystems.plugins.payments.model.Tokenization
-import kotlinx.coroutines.runBlocking
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaWebView
@@ -55,22 +54,19 @@ class OSPayments : CordovaImplementation() {
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
         this.callbackContext = callbackContext
-        val result = runBlocking {
-            when (action) {
-                "setupConfiguration" -> {
-                    setupConfiguration(args)
-                }
-                "checkWalletSetup" -> {
-                    checkWalletSetup()
-                }
-                "setDetails" -> {
-                    setDetailsAndTriggerPayment(args)
-                }
-                else -> false
+        when (action) {
+            "setupConfiguration" -> {
+                setupConfiguration(args)
             }
-            true
+            "checkWalletSetup" -> {
+                checkWalletSetup()
+            }
+            "setDetails" -> {
+                setDetailsAndTriggerPayment(args)
+            }
+            else -> return false
         }
-        return result
+        return true
     }
 
     private fun setupConfiguration(args: JSONArray) {
