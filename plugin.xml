@@ -20,9 +20,9 @@
       <preference name="AndroidXEnabled" value="true"/>
     </config-file>
 
-    <config-file parent="/manifest/application" target="AndroidManifest.xml">
+    <edit-config parent="/manifest/application" target="AndroidManifest.xml">
       <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true" />
-    </config-file>
+    </edit-config>
 
     <config-file parent="/resources" target="res/values/strings.xml">
       <string name="merchant_name">MERCHANT_NAME</string>
