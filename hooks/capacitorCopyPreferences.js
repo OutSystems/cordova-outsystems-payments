@@ -11,23 +11,23 @@ if (!platform || !projectRoot) {
 
 function getAppDir() {
     const dirs = {
-        ios: path.join(projectRoot, "ios", "App"),
-        android: path.join(projectRoot, "android", "app")
+        ios: path.join(projectRoot, "ios"),
+        android: path.join(projectRoot, "android")
     };
     return dirs[platform];
 }
 
 function getPaymentConfig() {
     try {
-        const dirs = {
-            ios: path.join(getAppDir(), "App"),
-            android: path.join(getAppDir(), "src", "main", "assets")
+        const configDir = {
+            ios: path.join(getAppDir(), "App", "App", "json-config"),
+            android: path.join(getAppDir(), "json-config")
         };
-        const configDir = path.join(dirs[platform], "public", "json-config");
-        const files = fs.readdirSync(configDir);
-        const file = files.find(f => f.startsWith("PaymentsPluginConfiguration") && f.endsWith(".json"));
-        if (!file) throw new Error("OUTSYSTEMS_PLUGIN_ERROR: No valid PaymentsPluginConfiguration JSON file found.");
-        return JSON.parse(fs.readFileSync(path.join(configDir, file), "utf8"));
+        const filePath = path.join(configDir[platform], "PaymentsPluginConfiguration.json");
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`OUTSYSTEMS_PLUGIN_ERROR: ${filePath} file not found.`);
+        }
+        return JSON.parse(fs.readFileSync(filePath, "utf8"));
     } catch (err) {
         throw new Error("OUTSYSTEMS_PLUGIN_ERROR: Unable to read or parse payment configuration.");
     }
@@ -97,7 +97,10 @@ function configureAndroid(paymentConfig) {
 
     if (hasGooglePay) {
         const et = require("elementtree");
-        const stringsXmlPath = path.join(getAppDir(), "src", "main", "res", "values", "strings.xml");
+        const stringsXmlPath = path.join(getAppDir(), "app", "src", "main", "res", "values", "strings.xml");
+        if (!fs.existsSync(stringsXmlPath)) {
+            throw new Error(`OUTSYSTEMS_PLUGIN_ERROR: ${stringsXmlPath} file not found.`);
+        }
         const stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
         const etreeStrings = et.parse(stringsXmlContents);
 
@@ -129,7 +132,10 @@ function configureAndroid(paymentConfig) {
 
         fs.writeFileSync(stringsXmlPath, etreeStrings.write({ xml_declaration: true, indent: 4 }));
 
-        const manifestPath = path.join(getAppDir(), "src", "main", "AndroidManifest.xml");
+        const manifestPath = path.join(getAppDir(), "app", "src", "main", "AndroidManifest.xml");
+        if (!fs.existsSync(manifestPath)) {
+            throw new Error(`OUTSYSTEMS_PLUGIN_ERROR: ${manifestPath} file not found.`);
+        }
         const manifestData = fs.readFileSync(manifestPath, "utf8");
         const etreeManifest = et.parse(manifestData);
         const root = etreeManifest.getroot();
@@ -195,7 +201,10 @@ function configureIOS(paymentConfig) {
         }
     });
 
-    let infoPlistPath = path.join(getAppDir(), "App", "Info.plist");
+    let infoPlistPath = path.join(getAppDir(), "App", "App", "Info.plist");
+    if (!fs.existsSync(infoPlistPath)) {
+        throw new Error(`OUTSYSTEMS_PLUGIN_ERROR: ${infoPlistPath} file not found.`);
+    }
     let infoPlistFile = fs.readFileSync(infoPlistPath, "utf8");
     let infoPlist = plist.parse(infoPlistFile);
 
@@ -220,9 +229,12 @@ function configureIOS(paymentConfig) {
 
     fs.writeFileSync(infoPlistPath, plist.build(infoPlist, { indent: "\t" }));
 
-    const pbxprojPath = path.join(getAppDir(), "App.xcodeproj", "project.pbxproj");
+    const pbxprojPath = path.join(getAppDir(), "App", "App.xcodeproj", "project.pbxproj");
+    if (!fs.existsSync(pbxprojPath)) {
+        throw new Error(`OUTSYSTEMS_PLUGIN_ERROR: ${pbxprojPath} file not found.`);
+    }
     const entitlementsFileName = 'App.entitlements';
-    const entitlementsPath = path.resolve(getAppDir(), "App", entitlementsFileName);
+    const entitlementsPath = path.join(getAppDir(), "App", "App", entitlementsFileName);
     let entitlements = {};
     if (fs.existsSync(entitlementsPath)) {
         entitlements = plist.parse(fs.readFileSync(entitlementsPath, 'utf8'));
