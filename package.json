@@ -16,6 +16,7 @@
   },
   "engines": [],
   "scripts": {
+    "capacitor:update:after": "node hooks/insert_azure_repository.js",
     "capacitor:sync:after": "node hooks/capacitorCopyPreferences.js"
   }
 }
