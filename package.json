@@ -1,6 +1,6 @@
 {
   "name": "com.outsystems.payments",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "OutSystems-owned plugin for mobile payments",
   "keywords": [
     "ecosystem:cordova",
@@ -16,6 +16,7 @@
   },
   "engines": [],
   "scripts": {
+    "capacitor:update:after": "node hooks/insert_azure_repository.js",
     "capacitor:sync:after": "node hooks/capacitorCopyPreferences.js"
   }
 }
