@@ -122,66 +122,18 @@ module.exports = function (context) {
         const resources = etreeStrings.getroot();
 
         upsertStringEntry(resources, 'merchant_name', merchant_name);
-
-        let merchantCountryTags = etreeStrings.findall('./string[@name="merchant_country_code"]');
-        for (let i = 0; i < merchantCountryTags.length; i++) {
-            merchantCountryTags[i].text = merchant_country_code;
-        }
-
-        let allowedNetworksTags = etreeStrings.findall('./string[@name="payment_allowed_networks"]');
-        for (let i = 0; i < allowedNetworksTags.length; i++) {
-            allowedNetworksTags[i].text = payment_allowed_networks;
-        }
-
-        let supportedCapabilitiesTags = etreeStrings.findall('./string[@name="payment_supported_capabilities"]');
-        for (let i = 0; i < supportedCapabilitiesTags.length; i++) {
-            supportedCapabilitiesTags[i].text = payment_supported_capabilities;
-        }
-
-        let supportedCardCountriesTags = etreeStrings.findall('./string[@name="payment_supported_card_countries"]');
-        for (let i = 0; i < supportedCardCountriesTags.length; i++) {
-            supportedCardCountriesTags[i].text = payment_supported_card_countries;
-        }
-
-        let shippingContactsTags = etreeStrings.findall('./string[@name="shipping_supported_contacts"]');
-        for (let i = 0; i < shippingContactsTags.length; i++) {
-            shippingContactsTags[i].text = shipping_supported_contacts;
-        }
-
-        let shippingCountriesTags = etreeStrings.findall('./string[@name="shipping_country_codes"]');
-        for (let i = 0; i < shippingCountriesTags.length; i++) {
-            shippingCountriesTags[i].text = shipping_country_codes;
-        }
-
-        let billingContactsTags = etreeStrings.findall('./string[@name="billing_supported_contacts"]');
-        for (let i = 0; i < billingContactsTags.length; i++) {
-            billingContactsTags[i].text = billing_supported_contacts;
-        }
-
-        let gatewayTags = etreeStrings.findall('./string[@name="gateway"]');
-        for (let i = 0; i < gatewayTags.length; i++) {
-            gatewayTags[i].text = gateway;
-        }
-
-        let backendUrlTags = etreeStrings.findall('./string[@name="backend_url"]');
-        for (let i = 0; i < backendUrlTags.length; i++) {
-            backendUrlTags[i].text = backend_url;
-        }
-
-        let gatewayMerchantIdTags = etreeStrings.findall('./string[@name="gateway_merchant_id"]');
-        for (let i = 0; i < gatewayMerchantIdTags.length; i++) {
-            gatewayMerchantIdTags[i].text = gateway_merchant_id;
-        }
-
-        let stripeVersionTags = etreeStrings.findall('./string[@name="stripe_version"]');
-        for (let i = 0; i < stripeVersionTags.length; i++) {
-            stripeVersionTags[i].text = stripe_version;
-        }
-
-        let stripePubKeyTags = etreeStrings.findall('./string[@name="stripe_pub_key"]');
-        for (let i = 0; i < stripePubKeyTags.length; i++) {
-            stripePubKeyTags[i].text = stripe_pub_key;
-        }
+        upsertStringEntry(resources, 'merchant_country_code', merchant_country_code);
+        upsertStringEntry(resources, 'payment_allowed_networks', payment_allowed_networks);
+        upsertStringEntry(resources, 'payment_supported_capabilities', payment_supported_capabilities);
+        upsertStringEntry(resources, 'payment_supported_card_countries', payment_supported_card_countries);
+        upsertStringEntry(resources, 'shipping_supported_contacts', shipping_supported_contacts);
+        upsertStringEntry(resources, 'shipping_country_codes', shipping_country_codes);
+        upsertStringEntry(resources, 'billing_supported_contacts', billing_supported_contacts);
+        upsertStringEntry(resources, 'gateway', gateway);
+        upsertStringEntry(resources, 'backend_url', backend_url);
+        upsertStringEntry(resources, 'gateway_merchant_id', gateway_merchant_id);
+        upsertStringEntry(resources, 'stripe_version', stripe_version);
+        upsertStringEntry(resources, 'stripe_pub_key', stripe_pub_key);
     
         let resultXmlStrings = etreeStrings.write();
         fs.writeFileSync(stringsXmlPath, resultXmlStrings);
