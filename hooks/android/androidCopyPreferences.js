@@ -119,11 +119,9 @@ module.exports = function (context) {
         let stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
         let stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
         let etreeStrings = et.parse(stringsXmlContents);
+        const resources = etreeStrings.getroot();
 
-        let merchantNameTags = etreeStrings.findall('./string[@name="merchant_name"]');
-        for (let i = 0; i < merchantNameTags.length; i++) {
-            merchantNameTags[i].text = merchant_name;
-        }
+        upsertStringEntry(resources, 'merchant_name', merchant_name);
 
         let merchantCountryTags = etreeStrings.findall('./string[@name="merchant_country_code"]');
         for (let i = 0; i < merchantCountryTags.length; i++) {
@@ -187,6 +185,25 @@ module.exports = function (context) {
     
         let resultXmlStrings = etreeStrings.write();
         fs.writeFileSync(stringsXmlPath, resultXmlStrings);
+    }
+
+    function upsertStringEntry(resourcesNode, key, value) {
+        const matches = resourcesNode.findall(`./string[@name="${key}"]`);
+        if (matches.length > 0) {
+            // Update the first match
+            matches[0].text = value;
+
+            // Remove any duplicates
+            for (let i = 1; i < matches.length; i++) {
+                resourcesNode.remove(matches[i]);
+            }
+        } else {
+            // Create new element
+            const newElement = new et.Element('string');
+            newElement.set('name', key);
+            newElement.text = value;
+            resourcesNode.append(newElement);
+        }
     }
 
 };
