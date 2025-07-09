@@ -14,6 +14,11 @@ The changes documented here do not include those from the original repository.
 ## 1.2.5
 
 ### Fixes
+- (android) Add missing Gson gradle dependency
+
+## 1.2.5
+
+### Fixes
 - (android) Release builds With Capacitor failing.
 
 ## 1.2.4
