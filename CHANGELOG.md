@@ -11,7 +11,7 @@ The changes documented here do not include those from the original repository.
 ### Features
 - (android) Updates hooks to avoid duplicates in `strings.xml` (https://outsystemsrd.atlassian.net/browse/RMET-4025).
 
-## 1.2.5
+## 1.2.6
 
 ### Fixes
 - (android) Add missing Gson gradle dependency
