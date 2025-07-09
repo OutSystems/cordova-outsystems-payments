@@ -31,7 +31,7 @@ dependencies {
     implementation("com.github.outsystems:oscordova-android:2.0.1@aar")
     implementation("com.github.outsystems:ospayments-android:1.1.2@aar")
 
-    implementation 'com.stripe:stripe-android:21.20.0'
+    implementation 'com.stripe:stripe-android:20.53.0'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "com.google.android.gms:play-services-wallet:19.1.0"
