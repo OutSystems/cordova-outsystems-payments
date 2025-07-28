@@ -29,7 +29,7 @@ apply plugin: 'kotlin-kapt'
 dependencies {
     implementation("com.github.outsystems:oscore-android:1.2.0@aar")
     implementation("com.github.outsystems:oscordova-android:2.0.1@aar")
-    implementation("com.github.outsystems:ospayments-android:1.1.2@aar")
+    implementation("com.github.outsystems:ospayments-android:1.1.3@aar")
 
     implementation 'com.stripe:stripe-android:20.5.0'
 

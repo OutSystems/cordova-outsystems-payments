@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.8
+
+### Fixes
+- (android) Migrate back button navigation while payment is being processed by updating dependency to `OSPaymentsLib-Android` (https://outsystemsrd.atlassian.net/browse/RMET-4338)
+
 ## 1.2.7
 
 ### Features
