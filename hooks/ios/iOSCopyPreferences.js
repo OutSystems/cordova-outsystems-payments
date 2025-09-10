@@ -26,7 +26,7 @@ module.exports = function (context) {
     let appName = appNameParser.name();
 
     let platformPath = path.join(projectRoot, 'platforms/ios');
-    let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);   
+    let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);
     if(!fs.existsSync(resourcesPath)){
         resourcesPath = platformPath + "/www";
     }
@@ -35,7 +35,8 @@ module.exports = function (context) {
     let jsonConfig = "";
     let jsonParsed;
     try {
-        jsonConfig = path.join(resourcesPath, 'json-config/PaymentsPluginConfiguration.json');
+        //jsonConfig = path.join(resourcesPath, 'json-config/PaymentsPluginConfiguration.json');
+        jsonConfig = getConfigPath(appName, platformPath, resourcesPath)
         let jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
         jsonParsed = JSON.parse(jsonConfigFile);
     } catch {
@@ -154,3 +155,11 @@ module.exports = function (context) {
 
     fs.writeFileSync(releaseEntitlementsPath, plist.build(releaseEntitlements, { indent: '\t' }));
 };
+
+function getConfigPath(appName, platformPath, resourcesPath) {
+    let newPath = path.join(platformPath, appName, "json-config/PaymentsPluginConfiguration.json");
+    if (fs.existsSync(newPath)) {
+        return newPath;
+    }
+    return path.join(resourcesPath, "json-config/PaymentsPluginConfiguration.json");
+}
