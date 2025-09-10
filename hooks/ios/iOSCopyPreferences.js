@@ -28,6 +28,7 @@ module.exports = function (context) {
     let platformPath = path.join(projectRoot, 'platforms/ios');
     let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);
     if(!fs.existsSync(resourcesPath)){
+        console.log("entered first if");
         resourcesPath = platformPath + "/www";
     }
 
@@ -158,8 +159,11 @@ module.exports = function (context) {
 
 function getConfigPath(appName, platformPath, resourcesPath) {
     let newPath = path.join(platformPath, appName, "json-config/PaymentsPluginConfiguration.json");
+    console.log("before if(newPath)");
     if (fs.existsSync(newPath)) {
+        console.log("entered if");
         return newPath;
     }
+    console.log("about to return getConfigPath");
     return path.join(resourcesPath, "json-config/PaymentsPluginConfiguration.json");
 }
