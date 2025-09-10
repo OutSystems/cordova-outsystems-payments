@@ -29,10 +29,7 @@ module.exports = function (context) {
     let resourcesPath = path.join(platformPath, appName, "Resources");
 
     if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
-      console.log("====> MABS 11.1");
       resourcesPath = path.join(platformPath, appName, "Resources/www");
-    } else {
-      console.log("====> MOCA BUILD 11.2/12");
     }
 
     //read json config file
@@ -40,7 +37,6 @@ module.exports = function (context) {
     let jsonParsed;
     try {
         jsonConfig = path.join(resourcesPath, 'json-config/PaymentsPluginConfiguration.json');
-        console.log("====> Returned path: ", jsonConfig);
         let jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
         jsonParsed = JSON.parse(jsonConfigFile);
     } catch {
