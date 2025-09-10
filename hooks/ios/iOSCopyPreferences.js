@@ -26,27 +26,21 @@ module.exports = function (context) {
     let appName = appNameParser.name();
 
     let platformPath = path.join(projectRoot, "platforms/ios");
-    /* let resourcesPath = path.join(projectRoot, `platforms/ios/${appName}/Resources/www`);
-    if(!fs.existsSync(resourcesPath)){
-        console.log("entered first if");
-        resourcesPath = platformPath + "/www";
-    }*/
-
     let resourcesPath = path.join(platformPath, appName, "Resources");
-    if (fs.existsSync(path.join(resourcesPath, "json-config"))) {
-      console.log("MOCA BUILD 11.2/12");
-    }else {
-      console.log("MABS 11.1");
+
+    if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
+      console.log("====> MABS 11.1");
       resourcesPath = path.join(platformPath, appName, "Resources/www");
+    } else {
+      console.log("====> MOCA BUILD 11.2/12");
     }
 
     //read json config file
     let jsonConfig = "";
     let jsonParsed;
     try {
-        //jsonConfig = path.join(resourcesPath, 'json-config/PaymentsPluginConfiguration.json');
-        jsonConfig = getConfigPath(appName, platformPath, resourcesPath)
-        console.log("Returned path: ", jsonConfig);
+        jsonConfig = path.join(resourcesPath, 'json-config/PaymentsPluginConfiguration.json');
+        console.log("====> Returned path: ", jsonConfig);
         let jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
         jsonParsed = JSON.parse(jsonConfigFile);
     } catch {
@@ -165,14 +159,3 @@ module.exports = function (context) {
 
     fs.writeFileSync(releaseEntitlementsPath, plist.build(releaseEntitlements, { indent: '\t' }));
 };
-
-function getConfigPath(appName, platformPath, resourcesPath) {
-    let newPath = path.join(platformPath, appName, "json-config/PaymentsPluginConfiguration.json");
-    console.log("before if newpath: " + newPath);
-    if (fs.existsSync(newPath)) {
-        console.log("entered if");
-        return newPath;
-    }
-    console.log("about to return getConfigPath");
-    return path.join(resourcesPath, "json-config/PaymentsPluginConfiguration.json");
-}
