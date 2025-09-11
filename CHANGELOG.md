@@ -9,7 +9,7 @@ The changes documented here do not include those from the original repository.
 ## 1.2.9
 
 ### Fixes
-- (iOS) Add fix to `iOSCopyPreferences.js` hook to correctly locate `PaymentsPluginConfiguration.json` on MOCA builds. (https://outsystemsrd.atlassian.net/browse/RMET-4469)
+- (android,ios) Add fix to `iOSCopyPreferences.js` hook to correctly locate `PaymentsPluginConfiguration.json` on MOCA builds. (https://outsystemsrd.atlassian.net/browse/RMET-4469)
 
 ## 1.2.8
 
