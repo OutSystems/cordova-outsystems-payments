@@ -27,17 +27,16 @@ module.exports = function (context) {
     let stripe_pub_key = "";
 
     let wwwFolder = "www";
-    let platformPath = path.join(projectRoot, `platforms/android/www`);
-          
-    if(!fs.existsSync(platformPath)){
-        platformPath = path.join(projectRoot, wwwFolder);
-    }
+    let platformPath = path.join(projectRoot, "platforms/android");
+    let resourcesPath = fs.existsSync(path.join(platformPath, "json-config"))
+        ? platformPath
+        : path.join(platformPath, wwwFolder);          
 
     let jsonConfig = "";
     let jsonParsed;
     try {
-        jsonConfig = path.join(platformPath, configFileName);
-        let jsonConfigFile = fs.readFileSync(jsonConfig).toString();
+        jsonConfig = path.join(resourcesPath, configFileName);
+        let jsonConfigFile = fs.readFileSync(jsonConfig, 'utf8');
         jsonParsed = JSON.parse(jsonConfigFile);
     }
     catch {
