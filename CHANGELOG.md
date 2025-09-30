@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.10
+
+### Fixes
+- (android) Removes the `kotlin-kapt` plugin that was being added, fixing builds for Capacitor apps (https://outsystemsrd.atlassian.net/browse/RMET-4515)
+
 ## 1.2.9
 
 ### Fixes
