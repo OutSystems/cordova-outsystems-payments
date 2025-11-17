@@ -30,7 +30,7 @@ module.exports = function (context) {
     let platformPath = path.join(projectRoot, "platforms/android");
     let resourcesPath = fs.existsSync(path.join(platformPath, "json-config"))
         ? platformPath
-        : path.join(platformPath, wwwFolder);          
+        : path.join(projectRoot, wwwFolder);
 
     let jsonConfig = "";
     let jsonParsed;
