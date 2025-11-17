@@ -29,7 +29,7 @@ module.exports = function (context) {
     let resourcesPath = path.join(platformPath, appName, "Resources");
 
     if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
-      resourcesPath = path.join(platformPath, appName, "Resources/www");
+      resourcesPath = path.join(platformPath, "www");
     }
 
     //read json config file
