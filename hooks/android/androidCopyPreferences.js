@@ -115,7 +115,30 @@ module.exports = function (context) {
     });
 
     if(hasGooglePay){
-        let stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
+
+        // create XML with correct values directly
+        var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/os_payments_strings.xml');
+
+        const xmlContent = `<?xml version='1.0' encoding='utf-8'?>
+<resources>
+      <string name="merchant_name"></string>
+      <string name="merchant_country_code"></string>
+      <string name="payment_allowed_networks"></string>
+      <string name="payment_supported_capabilities"></string>
+      <string name="payment_supported_card_countries"></string>
+      <string name="shipping_supported_contacts"></string>
+      <string name="shipping_country_codes"></string>
+      <string name="billing_supported_contacts"></string>
+      <string name="gateway"></string>
+      <string name="backend_url"></string>
+      <string name="gateway_merchant_id"></string>
+      <string name="stripe_version"></string>
+      <string name="stripe_pub_key"></string>
+</resources>`;
+
+        // write XML file directly
+        fs.writeFileSync(stringsXmlPath, xmlContent);
+
         let stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
         let etreeStrings = et.parse(stringsXmlContents);
         const resources = etreeStrings.getroot();
