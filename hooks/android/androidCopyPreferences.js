@@ -28,9 +28,17 @@ module.exports = function (context) {
 
     let wwwFolder = "www";
     let platformPath = path.join(projectRoot, "platforms/android");
+
+    // first we look for the platforms/android/json-config directory
     let resourcesPath = fs.existsSync(path.join(platformPath, "json-config"))
         ? platformPath
-        : path.join(projectRoot, wwwFolder);
+        : path.join(platformPath, wwwFolder);
+
+    // it that directory doesn't then we look for platforms/android/www
+    if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
+        // if that doesn't exist then we try to use root/www directly
+        resourcesPath = path.join(projectRoot, wwwFolder);
+    }
 
     let jsonConfig = "";
     let jsonParsed;
