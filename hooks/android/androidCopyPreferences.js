@@ -34,7 +34,7 @@ module.exports = function (context) {
         ? platformPath
         : path.join(platformPath, wwwFolder);
 
-    // it that directory doesn't then we look for platforms/android/www
+    // it that directory doesn't then we look for platforms/android/www/json-config
     if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
         // if that doesn't exist then we try to use root/www directly
         resourcesPath = path.join(projectRoot, wwwFolder);
