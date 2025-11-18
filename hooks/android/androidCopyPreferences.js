@@ -129,19 +129,19 @@ module.exports = function (context) {
 
         const xmlContent = `<?xml version='1.0' encoding='utf-8'?>
 <resources>
-      <string name="merchant_name"></string>
-      <string name="merchant_country_code"></string>
-      <string name="payment_allowed_networks"></string>
-      <string name="payment_supported_capabilities"></string>
-      <string name="payment_supported_card_countries"></string>
-      <string name="shipping_supported_contacts"></string>
-      <string name="shipping_country_codes"></string>
-      <string name="billing_supported_contacts"></string>
-      <string name="gateway"></string>
-      <string name="backend_url"></string>
-      <string name="gateway_merchant_id"></string>
-      <string name="stripe_version"></string>
-      <string name="stripe_pub_key"></string>
+      <string name="merchant_name">MERCHANT_NAME</string>
+      <string name="merchant_country_code">MERCHANT_COUNTRY_CODE</string>
+      <string name="payment_allowed_networks">ALLOWED_NETWORKS</string>
+      <string name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string>
+      <string name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string>
+      <string name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string>
+      <string name="shipping_country_codes">SHIPPING_COUNTRY_CODES</string>
+      <string name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string>
+      <string name="gateway">GATEWAY</string>
+      <string name="backend_url">BACKEND_URL</string>
+      <string name="gateway_merchant_id">GATEWAY_MERCHANT_ID</string>
+      <string name="stripe_version">STRIPE_VERSION</string>
+      <string name="stripe_pub_key">STRIPE_PUB_KEY</string>
 </resources>`;
 
         // write XML file directly
