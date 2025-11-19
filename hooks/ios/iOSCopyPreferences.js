@@ -28,13 +28,18 @@ module.exports = function (context) {
     let platformPath = path.join(projectRoot, "platforms/ios");
 
     // first we look for the platforms/ios/<AppName>/Resources directory
-    let resourcesPath = path.join(platformPath, appName, "Resources")
+    let resourcesPath = fs.existsSync(platformPath, appName, "Resources/json-config")
         ? path.join(platformPath, appName, "Resources")
         : path.join(platformPath, "www")
 
     // if that directory doesn't exist then we look for platforms/ios/www/json-config
     if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
-        // if that doesn't exist then we try to use root/www directly
+        // if that doesn't exist then we try to use platforms/ios/<AppName>/Resources/www
+        resourcesPath = path.join(platformPath, appName, "Resources/www");
+    }
+
+    // if that doesn't exist then we try to use root/www directly
+    if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
         resourcesPath = path.join(projectRoot, "www");
     }
 
