@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.11
+
+### Fixes
+- (android) Fixes missing strings.xml on target project (https://outsystemsrd.atlassian.net/browse/RMET-4779)
+- (android) include all directory possibilities for json-config/PaymentsPluginConfiguration.json config file (https://outsystemsrd.atlassian.net/browse/RMET-4779)
+- (ios) include all directory possibilities for json-config/PaymentsPluginConfiguration.json config file (https://outsystemsrd.atlassian.net/browse/RMET-4779)
+
 ## 1.2.10
 
 ### Fixes

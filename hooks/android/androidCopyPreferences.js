@@ -28,9 +28,17 @@ module.exports = function (context) {
 
     let wwwFolder = "www";
     let platformPath = path.join(projectRoot, "platforms/android");
+
+    // first we look for the platforms/android/json-config directory
     let resourcesPath = fs.existsSync(path.join(platformPath, "json-config"))
         ? platformPath
-        : path.join(platformPath, wwwFolder);          
+        : path.join(platformPath, wwwFolder);
+
+    // it that directory doesn't then we look for platforms/android/www/json-config
+    if (!fs.existsSync(path.join(resourcesPath, "json-config"))) {
+        // if that doesn't exist then we try to use root/www directly
+        resourcesPath = path.join(projectRoot, wwwFolder);
+    }
 
     let jsonConfig = "";
     let jsonParsed;
@@ -115,7 +123,30 @@ module.exports = function (context) {
     });
 
     if(hasGooglePay){
-        let stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/strings.xml');
+
+        // create XML with correct values directly
+        var stringsXmlPath = path.join(projectRoot, 'platforms/android/app/src/main/res/values/os_payments_strings.xml');
+
+        const xmlContent = `<?xml version='1.0' encoding='utf-8'?>
+<resources>
+      <string name="merchant_name">MERCHANT_NAME</string>
+      <string name="merchant_country_code">MERCHANT_COUNTRY_CODE</string>
+      <string name="payment_allowed_networks">ALLOWED_NETWORKS</string>
+      <string name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string>
+      <string name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string>
+      <string name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string>
+      <string name="shipping_country_codes">SHIPPING_COUNTRY_CODES</string>
+      <string name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string>
+      <string name="gateway">GATEWAY</string>
+      <string name="backend_url">BACKEND_URL</string>
+      <string name="gateway_merchant_id">GATEWAY_MERCHANT_ID</string>
+      <string name="stripe_version">STRIPE_VERSION</string>
+      <string name="stripe_pub_key">STRIPE_PUB_KEY</string>
+</resources>`;
+
+        // write XML file directly
+        fs.writeFileSync(stringsXmlPath, xmlContent);
+
         let stringsXmlContents = fs.readFileSync(stringsXmlPath).toString();
         let etreeStrings = et.parse(stringsXmlContents);
         const resources = etreeStrings.getroot();
