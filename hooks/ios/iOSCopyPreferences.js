@@ -88,9 +88,15 @@ module.exports = function (context) {
                 error_list.push('Payment Supported Capabilities');
             }
 
-            shipping_supported_contacts = configItem.shipping_supported_contacts;
-            billing_supported_contacts = configItem.billing_supported_contacts;
-            payment_supported_card_countries = configItem.payment_supported_card_countries;
+            if (configItem.shipping_supported_contacts != null && configItem.shipping_supported_contacts.length > 0) {
+                shipping_supported_contacts = configItem.shipping_supported_contacts;
+            }
+            if (configItem.billing_supported_contacts != null && configItem.billing_supported_contacts.length > 0) {
+                billing_supported_contacts = configItem.billing_supported_contacts;
+            }
+            if (configItem.payment_supported_card_countries != null && configItem.payment_supported_card_countries.length > 0) {
+                payment_supported_card_countries = configItem.payment_supported_card_countries;
+            }
 
             if (configItem.tokenization != null) {
                 if (configItem.tokenization.gateway != null && configItem.tokenization.gateway !== "") {
