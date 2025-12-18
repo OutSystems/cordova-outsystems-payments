@@ -70,10 +70,18 @@ function configureAndroid(paymentConfig) {
             merchant_country_code = validateAndAssignField(configItem, "merchant_country_code", error_list, "Merchant Country");
             payment_allowed_networks = validateAndAssignField(configItem, "payment_allowed_networks", error_list, "Payment Allowed Networks");
             payment_supported_capabilities = validateAndAssignField(configItem, "payment_supported_capabilities", error_list, "Payment Supported Capabilities");
-            payment_supported_card_countries = configItem.payment_supported_card_countries;
-            shipping_supported_contacts = configItem.shipping_supported_contacts;
-            shipping_country_codes = configItem.shipping_country_codes;
-            billing_supported_contacts = configItem.billing_supported_contacts;
+            if(configItem.payment_supported_card_countries && configItem.payment_supported_card_countries.length > 0){
+                payment_supported_card_countries = configItem.payment_supported_card_countries;
+            }
+            if(configItem.shipping_supported_contacts && configItem.shipping_supported_contacts.length > 0){
+                shipping_supported_contacts = configItem.shipping_supported_contacts;
+            }
+            if(configItem.shipping_country_codes && configItem.shipping_country_codes.length > 0){
+                shipping_country_codes = configItem.shipping_country_codes;
+            }
+            if(configItem.billing_supported_contacts && configItem.billing_supported_contacts.length > 0){
+                billing_supported_contacts = configItem.billing_supported_contacts;
+            }
 
             if (configItem.tokenization) {
                 gateway = configItem.tokenization.gateway;
@@ -180,9 +188,15 @@ function configureIOS(paymentConfig) {
             merchant_country_code = validateAndAssignField(configItem, "merchant_country_code", error_list, "Merchant Country");
             payment_allowed_networks = validateAndAssignField(configItem, "payment_allowed_networks", error_list, "Payment Allowed Networks");
             payment_supported_capabilities = validateAndAssignField(configItem, "payment_supported_capabilities", error_list, "Payment Supported Capabilities");
-            shipping_supported_contacts = configItem.shipping_supported_contacts;
-            billing_supported_contacts = configItem.billing_supported_contacts;
-            payment_supported_card_countries = configItem.payment_supported_card_countries;
+            if (configItem.shipping_supported_contacts != null && configItem.shipping_supported_contacts.length > 0) {
+                shipping_supported_contacts = configItem.shipping_supported_contacts;
+            }
+            if (configItem.billing_supported_contacts != null && configItem.billing_supported_contacts.length > 0) {
+                billing_supported_contacts = configItem.billing_supported_contacts;
+            }
+            if (configItem.payment_supported_card_countries != null && configItem.payment_supported_card_countries.length > 0) {
+                payment_supported_card_countries = configItem.payment_supported_card_countries;
+            }
 
             if (configItem.tokenization) {
                 payment_gateway = validateAndAssignField(configItem.tokenization, "gateway", error_list, "Payment Gateway Name");
