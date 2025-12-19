@@ -10,7 +10,7 @@ The changes documented here do not include those from the original repository.
 
 ### Fixes
 
-- Align handling of optional payment config properties in cordova Hook. Fixes build error for iOS when missing properties like `payment_supported_card_countries`.
+- Align handling of optional payment config properties in Cordova / Capacitor hooks. Fixes build error for iOS when missing properties like `payment_supported_card_countries`.
 
 ## 1.2.11
 
