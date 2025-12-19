@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.12
+
+### Fixes
+
+- Align handling of optional payment config properties in cordova Hook. Fixes build error for iOS when missing properties like `payment_supported_card_countries`.
+
 ## 1.2.11
 
 ### Fixes
