@@ -1,4 +1,3 @@
-import OSCommonPluginLib
 import OSPaymentsLib
 
 @objc(OSPayments)
@@ -32,11 +31,8 @@ class OSPayments: CDVPlugin {
         let accessToken = command.argument(at: 1) as? String
         self.plugin?.set(detailsText, and: accessToken)
     }
-}
-
-// MARK: - OSCore's PlatformProtocol Methods
-extension OSPayments: PlatformProtocol {
-    func sendResult(result: String? = nil, error: NSError? = nil, callBackID: String) {
+    
+    private func sendResult(result: String? = nil, error: NSError? = nil, callBackID: String) {
         var pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR)
 
         if let error = error {

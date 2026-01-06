@@ -100,16 +100,6 @@
     <!-- iOS Source Files -->
     <source-file src="src/ios/OSPayments.swift"/>
     <framework src="src/ios/frameworks/OSPaymentsLib.xcframework" embed="true" custom="true" />
-
-    <podspec>
-        <config>
-            <source url="https://cdn.cocoapods.org/"/>
-        </config>
-        <pods use-frameworks="true">
-            <pod name="OSCommonPluginLib" spec="1.0.0" />
-        </pods>
-    </podspec>
-
   </platform>
 
 </plugin>
