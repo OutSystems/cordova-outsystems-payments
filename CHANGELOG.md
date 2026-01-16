@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.14
+
+### Chores
+
+- (android) remove unecessary dependency to `oscore` and `oscordova` on Android (https://outsystemsrd.atlassian.net/browse/RMET-4900)
+
 ## 1.2.13
 
 ### Chores
