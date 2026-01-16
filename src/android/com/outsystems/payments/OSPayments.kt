@@ -3,7 +3,6 @@ package com.outsystems.payments
 import android.app.Activity
 import android.content.Intent
 import com.google.gson.Gson
-import com.outsystems.plugins.oscordova.CordovaImplementation
 import com.outsystems.plugins.payments.controller.OSPMTGooglePayManager
 import com.outsystems.plugins.payments.controller.OSPMTGooglePlayHelper
 import com.outsystems.plugins.payments.controller.OSPMTController
@@ -13,12 +12,16 @@ import com.outsystems.plugins.payments.model.PaymentDetails
 import com.outsystems.plugins.payments.model.Tokenization
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaInterface
+import org.apache.cordova.CordovaPlugin
 import org.apache.cordova.CordovaWebView
+import org.apache.cordova.PluginResult
+import org.apache.cordova.PluginResult.Status
 import org.json.JSONArray
+import org.json.JSONObject
 
-class OSPayments : CordovaImplementation() {
+class OSPayments : CordovaPlugin() {
 
-    override var callbackContext: CallbackContext? = null
+    var callbackContext: CallbackContext? = null
     private lateinit var googlePayManager: OSPMTGooglePayManager
     private lateinit var paymentsController: OSPMTController
     private lateinit var googlePlayHelper: OSPMTGooglePlayHelper
@@ -47,9 +50,9 @@ class OSPayments : CordovaImplementation() {
 
     override fun initialize(cordova: CordovaInterface, webView: CordovaWebView) {
         super.initialize(cordova, webView)
-        googlePayManager = OSPMTGooglePayManager(getActivity())
+        googlePayManager = OSPMTGooglePayManager(cordova.activity)
         googlePlayHelper = OSPMTGooglePlayHelper()
-        paymentsController = OSPMTController(googlePayManager, buildPaymentConfigurationInfo(getActivity()), googlePlayHelper)
+        paymentsController = OSPMTController(googlePayManager, buildPaymentConfigurationInfo(cordova.activity), googlePlayHelper)
     }
 
     override fun execute(action: String, args: JSONArray, callbackContext: CallbackContext): Boolean {
@@ -70,7 +73,7 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun setupConfiguration(args: JSONArray) {
-        paymentsController.setupConfiguration(getActivity(), args.get(0).toString(),
+        paymentsController.setupConfiguration(cordova.activity, args.get(0).toString(),
             {
                 sendPluginResult(it, null)
             },
@@ -81,7 +84,7 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun checkWalletSetup(){
-        paymentsController.verifyIfWalletIsSetup(getActivity(),
+        paymentsController.verifyIfWalletIsSetup(cordova.activity,
             {
                 sendPluginResult(it, null)
             }, {
@@ -91,12 +94,12 @@ class OSPayments : CordovaImplementation() {
     }
 
     private fun setDetailsAndTriggerPayment(args: JSONArray){
-        setAsActivityResultCallback()
+        cordova.setActivityResultCallback(this)
 
         paymentDetails = buildPaymentDetails(args)
 
         if(paymentDetails != null){
-            paymentsController.setDetailsAndTriggerPayment(getActivity(), paymentDetails!!, args.getString(1))
+            paymentsController.setDetailsAndTriggerPayment(cordova.activity, paymentDetails!!, args.getString(1))
         }
         else{
             sendPluginResult(null, Pair(formatErrorCode(OSPMTError.INVALID_PAYMENT_DETAILS.code), OSPMTError.INVALID_PAYMENT_DETAILS.description))
@@ -124,11 +127,6 @@ class OSPayments : CordovaImplementation() {
 
     override fun onResume(multitasking: Boolean) {
         // Not used in this project.
-    }
-
-    override fun areGooglePlayServicesAvailable(): Boolean {
-        // Not used in this project.
-        return false
     }
 
     private fun formatErrorCode(code: Int): String {
@@ -163,12 +161,26 @@ class OSPayments : CordovaImplementation() {
     private fun buildPaymentDetails(args: JSONArray) : PaymentDetails? {
         return try {
             gson.fromJson(args.getString(0), PaymentDetails::class.java)
-        } catch (e: Exception){
+        } catch (_: Exception){
             null
         }
     }
 
     private fun getStringResourceId(activity: Activity, typeAndName: String): Int {
         return activity.resources.getIdentifier(typeAndName, "string", activity.packageName)
+    }
+
+    private fun <T> sendPluginResult(resultVariable: T, error: Pair<String, String>?) {
+        var pluginResult: PluginResult?
+        resultVariable?.let {
+            pluginResult = PluginResult(Status.OK, resultVariable.toString())
+            this.callbackContext?.sendPluginResult(pluginResult)
+            return
+        }
+        val jsonResult = JSONObject()
+        jsonResult.put("code", error?.first)
+        jsonResult.put("message", error?.second ?: "No Results")
+        pluginResult = PluginResult(Status.ERROR, jsonResult)
+        this.callbackContext?.sendPluginResult(pluginResult)
     }
 }
