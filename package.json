@@ -1,6 +1,6 @@
 {
   "name": "com.outsystems.payments",
-  "version": "1.2.12",
+  "version": "1.2.14",
   "description": "OutSystems-owned plugin for mobile payments",
   "keywords": [
     "ecosystem:cordova",
