@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## [Unreleased]
+
+### Fixes
+
+- (iOS) Correct hook to work on Cordova iOS 8 (https://outsystemsrd.atlassian.net/browse/RMET-5120)
+
 ## 1.2.14
 
 ### Chores
