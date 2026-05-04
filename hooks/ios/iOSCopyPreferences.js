@@ -24,8 +24,12 @@ module.exports = function (context) {
     let appNamePath = path.join(projectRoot, 'config.xml');
     let appNameParser = new ConfigParser(appNamePath);
     let appName = appNameParser.name();
-
     let platformPath = path.join(projectRoot, "platforms/ios");
+    // Cordova iOS 8 uses 'App' as the fixed project folder;
+    //  earlier versions used the app name
+    if (fs.existsSync(path.join(platformPath, 'App'))) {
+        appName = 'App';
+    }
 
     // first we look for the platforms/ios/<AppName>/Resources directory
     let resourcesPath = fs.existsSync(platformPath, appName, "Resources/json-config")
