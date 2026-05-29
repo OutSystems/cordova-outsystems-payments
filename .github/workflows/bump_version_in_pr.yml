@@ -2,7 +2,7 @@ name: Bump version in PR
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened, edited]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
   workflow_dispatch:
     inputs:
       pr:
@@ -20,7 +20,9 @@ concurrency:
 
 jobs:
   bump:
+    if: github.event.pull_request.draft != true
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Resolve PR metadata
         env:
@@ -51,6 +53,7 @@ jobs:
       - name: Skip if PR does not target main
         id: gate_base
         run: |
+          set -euo pipefail
           if [ "$PR_BASE_REF" != "main" ]; then
             echo "PR targets $PR_BASE_REF (not main) — skipping."
             echo "skip=true" >> "$GITHUB_OUTPUT"
@@ -60,6 +63,7 @@ jobs:
         if: steps.gate_base.outputs.skip != 'true'
         id: gate_fork
         run: |
+          set -euo pipefail
           if [ "$PR_HEAD_REPO" != "$GITHUB_REPOSITORY" ]; then
             echo "PR is from a fork ($PR_HEAD_REPO) — skipping (cannot push to fork branches)."
             echo "skip=true" >> "$GITHUB_OUTPUT"
