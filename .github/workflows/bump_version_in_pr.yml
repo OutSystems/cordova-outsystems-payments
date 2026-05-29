@@ -105,10 +105,18 @@ jobs:
       - name: Commit and push bump
         if: steps.compute.outputs.changed == 'true'
         working-directory: pr
+        env:
+          BUMP: ${{ steps.compute.outputs.bump }}
+          VERSION: ${{ steps.compute.outputs.version }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package.json plugin.xml CHANGELOG.md
-          git commit -m "chore(release): prepare ${{ steps.compute.outputs.version }}"
+          if [ "$BUMP" = "none" ]; then
+            commit_msg="chore(release): revert version bump"
+          else
+            commit_msg="chore(release): prepare $VERSION"
+          fi
+          git commit -m "$commit_msg"
           git push origin "HEAD:${PR_HEAD_REF}"
