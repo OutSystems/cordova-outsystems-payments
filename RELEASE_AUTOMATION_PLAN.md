@@ -159,53 +159,78 @@ No changes to `package.json` are required — the script uses only Node built-in
 
 ## Acceptance criteria
 
-Test scenarios to validate the implementation in the fork:
+Test scenarios to validate the implementation in the fork. All checked items were exercised end-to-end on `OS-pedrogustavobilro/cordova-outsystems-payments` and observed to behave as described.
 
 ### Version computation
 
-- [ ] **AC-1**: Opening a PR with title `feat: <desc>` updates `package.json`, `plugin.xml` to `1.3.0` and adds a `## 1.3.0` / `### Features` entry in `CHANGELOG.md` on the PR branch.
-- [ ] **AC-2**: Opening a PR with title `fix: <desc>` bumps to `1.2.16` under `### Fixes`.
-- [ ] **AC-3**: Opening a PR with title `chore: <desc>` bumps to `1.2.16` under `### Chores`.
-- [ ] **AC-4**: Opening a PR with title `refactor: <desc>` bumps to `1.2.16` under `### Chores`.
-- [ ] **AC-5**: Opening a PR with title `feat!: <desc>` bumps to `2.0.0` under `### BREAKING CHANGES`.
-- [ ] **AC-6**: Opening a PR with title `feat: <desc>` and body containing `BREAKING CHANGE: <note>` bumps to `2.0.0` under `### BREAKING CHANGES`.
-- [ ] **AC-7**: Opening a PR with a commit message footer `BREAKING CHANGE: <note>` (title is just `fix: <desc>`) bumps to `2.0.0` under `### BREAKING CHANGES`.
-- [ ] **AC-8**: Opening a PR with title `docs: <desc>` results in **no commit, no push, no file changes** — workflow exits silently.
-- [ ] **AC-9**: Opening a PR with title `ci: <desc>` results in no changes.
+- [x] **AC-1**: Opening a PR with title `feat: <desc>` updates `package.json`, `plugin.xml` to `1.3.0` and adds a `## 1.3.0` / `### Features` entry in `CHANGELOG.md` on the PR branch.
+- [x] **AC-2**: Opening a PR with title `fix: <desc>` bumps to `1.2.16` under `### Fixes`.
+- [x] **AC-3**: Opening a PR with title `chore: <desc>` bumps to `1.2.16` under `### Chores`.
+- [x] **AC-4**: Opening a PR with title `refactor: <desc>` bumps to `1.2.16` under `### Chores`.
+- [x] **AC-5**: Opening a PR with title `feat!: <desc>` bumps to `2.0.0` under `### BREAKING CHANGES`.
+- [x] **AC-6**: Opening a PR with title `feat: <desc>` and body containing `BREAKING CHANGE: <note>` bumps to `2.0.0` under `### BREAKING CHANGES`.
+- [x] **AC-7**: Opening a PR with a commit message footer `BREAKING CHANGE: <note>` (title is just `fix: <desc>`) bumps to `2.0.0` under `### BREAKING CHANGES`.
+- [x] **AC-8**: Opening a PR with title `docs: <desc>` results in **no commit, no push, no file changes** — workflow exits silently.
+- [x] **AC-9**: Opening a PR with title `ci: <desc>` results in no changes.
 
 ### PR lifecycle
 
-- [ ] **AC-10**: Editing a PR's title from `fix:` to `feat:` (after the first run) updates the bump from `1.2.16` → `1.3.0` and rewrites the CHANGELOG section in the next bump commit.
-- [ ] **AC-11**: Re-running the workflow on a PR whose files are already at the correct target version produces **no new commit** (loop-breaker verified).
-- [ ] **AC-12**: A PR author manually edits `CHANGELOG.md` and pushes; on the next workflow run, those manual edits are overwritten by the workflow's regenerated CHANGELOG.
+- [x] **AC-10**: Editing a PR's title from `fix:` to `feat:` (after the first run) updates the bump from `1.2.16` → `1.3.0` and rewrites the CHANGELOG section in the next bump commit.
+- [x] **AC-11**: Re-running the workflow on a PR whose files are already at the correct target version produces **no new commit** (loop-breaker verified).
+- [x] **AC-12**: A PR author manually edits `CHANGELOG.md` and pushes; on the next workflow run, those manual edits are overwritten by the workflow's regenerated CHANGELOG.
 
 ### Race / concurrency
 
-- [ ] **AC-13**: Two PRs open simultaneously, both `feat:`. PR-A merges first and main is tagged `1.3.0`. PR-B's workflow auto-re-triggers and recomputes its bump to `1.4.0`, pushing an updated bump commit.
-- [ ] **AC-14**: Rapid edits to a PR's title (e.g., three edits within seconds) result in only the final state being pushed (concurrency `cancel-in-progress: true` verified).
+- [x] **AC-13**: Two PRs open simultaneously, both `feat:`. PR-A merges first and main is tagged `1.3.0`. PR-B's workflow auto-re-triggers and recomputes its bump to `1.4.0`, pushing an updated bump commit.
+- [x] **AC-14**: Rapid edits to a PR's title result in only the final state being pushed (concurrency `cancel-in-progress: true` verified — `gh run list` showed the earlier run as `cancelled`).
 
 ### Release on main
 
-- [ ] **AC-15**: Squash-merging a `feat:` PR to main creates a git tag `1.3.0` on the squash commit SHA and a GitHub Release with body extracted from the matching CHANGELOG section.
-- [ ] **AC-16**: Squash-merging a `docs:` PR (no version bump) does NOT create a new tag (`package.json` version unchanged, no matching gap to fill).
-- [ ] **AC-17**: After tagging, the workflow successfully dispatches `bump_version_in_pr.yml` for every other open PR.
+- [x] **AC-15**: Squash-merging a `feat:` PR to main creates a git tag `1.3.0` on the squash commit SHA and a GitHub Release with body extracted from the matching CHANGELOG section.
+- [x] **AC-16**: Squash-merging a `docs:` PR (no version bump) does NOT create a new tag (`package.json` version unchanged, log: `Tag X.Y.Z already exists — no release needed.`). Dispatch step to re-trigger open PRs still runs unconditionally.
+- [x] **AC-17**: After tagging, the workflow successfully dispatches `bump_version_in_pr.yml` for every other open PR.
 
 ### Edge cases
 
-- [ ] **AC-18**: A PR from a fork is detected and the workflow exits without error, leaving the PR untouched.
-- [ ] **AC-19**: A PR targeting a non-`main` base branch is detected and the workflow exits without making any changes.
-- [ ] **AC-20**: The "no prior version" fallback (`1.0.0`) is exercised by manually clearing CHANGELOG + tags on a test branch — first PR there should produce `1.0.0` regardless of bump type.
+- [ ] **AC-18** *(skipped)*: A PR from a fork is detected and the workflow exits without error. Skipped — requires a fork-of-the-fork to test cleanly; code path is straightforward (`PR_HEAD_REPO != GITHUB_REPOSITORY` early-exit).
+- [x] **AC-19** *(validated separately)*: A PR targeting a non-`main` base branch is detected and the workflow exits without making any changes.
+- [ ] **AC-20** *(skipped)*: The "no prior version" fallback (`1.0.0`) is exercised by manually clearing CHANGELOG + tags on a test branch — first PR there should produce `1.0.0` regardless of bump type. Skipped — not relevant for repos with an existing version history (which is every repo we'd actually deploy this in).
 
-## Comparison table — this plan vs PR #173
+### Side-effect findings from testing
 
-|                                  | Option 3 (this plan)                                   | PR #173 (semantic-release + release PR)             |
-| -------------------------------- | ------------------------------------------------------ | ---------------------------------------------------- |
-| Number of workflows              | 3                                                      | 2 (+ optional auto-merge step)                       |
-| Release PR                       | None — each feature PR is the release                  | Yes — separate PR from `release` branch              |
-| Manual trigger                   | None                                                   | `workflow_dispatch` to start release flow            |
-| Approvals needed per release     | Same as any feature PR (1–2 humans)                    | Approvals on the release PR (1–2 humans)             |
-| Merge strategy                   | Squash (assumed)                                       | Merge commit (required to preserve tags)             |
-| Tagging happens                  | After squash-merge to main                             | Inside the `release` branch, before PR merge         |
-| Race conditions                  | Handled via re-trigger on main updates                 | Serialized — one release PR open at a time           |
-| Tooling                          | Custom Node script + GitHub Actions                    | semantic-release + plugins                           |
-| Diff during review               | Version bump visible in the feature PR                 | Version bump visible in the release PR               |
+A few behaviors not captured in the AC list but worth noting:
+
+- **CHANGELOG sync commits on idempotent re-runs**: when main moves and `release_on_main` re-triggers open PRs, even PRs whose target version is *unchanged* (e.g., a `feat!:` PR at 2.0.0 when main goes from 1.2.15 → 1.3.0) get a new bot commit. Reason: their CHANGELOG was missing the now-released main entry, and the workflow always rebuilds `CHANGELOG = main's + new entry`. The version field doesn't move; only the CHANGELOG syncs. Correct behavior, just verbose.
+- **`chore(release): revert version bump` commit message** on no-release PRs (`docs:`, `ci:`, etc.) appears when main moves and the PR's CHANGELOG needs syncing. There's no actual revert happening — the message just signals "this is the no-release path."
+
+## Verified commits
+
+Bot commits are created via the GitHub Git Data REST API (`POST /git/blobs` → `POST /git/trees` → `POST /git/commits` → `PATCH /git/refs/heads/<branch>`) rather than `git commit` + `git push`. GitHub signs API-created commits server-side using the `github-actions` App's GPG key, so the bot's commits show the green **Verified** badge in the GitHub UI. This makes the workflow compatible with `Require signed commits` branch protection.
+
+No new secrets or keys are required — the default `GITHUB_TOKEN` (which is the `github-actions` App's installation token) is what triggers the server-side signing.
+
+## Comparison — Option 3 vs PR #173 (semantic-release + release PR)
+
+| Dimension | Option 3 (this plan) | PR #173 (semantic-release) |
+| --- | --- | --- |
+| **Number of workflows** | 3 (`validate_pr_title`, `bump_version_in_pr`, `release_on_main`) | 2 (`release_plugin`, `trigger_semantic_release`) |
+| **Custom Node code** | ~250 LOC (`compute_release.cjs`) | None — semantic-release config (~80 LOC) |
+| **Release PR** | None — each feature PR carries its bump | Yes — separate PR from `release` branch, must be merged |
+| **Manual trigger to release** | None (releases happen on feature-PR merge) | `workflow_dispatch` on `release_plugin.yml` |
+| **Approvals needed per release** | Built into the feature PR's normal review | Reviewer(s) on the release PR (extra round) |
+| **Merge strategy on PR head** | Squash (clean history) | Merge commit required (to preserve semantic-release tags) |
+| **Where the tag is created** | After squash-merge, by `release_on_main.yml` on the squash commit SHA | By `semantic-release` inside the `release` branch, before the PR merges |
+| **Verified bot commits** | Yes (Git Data API + `GITHUB_TOKEN`) | No (commits made by `git push`, unsigned) |
+| **Branch protection: "Require signed commits"** | Compatible | Incompatible without extra signing setup |
+| **Concurrent open PRs** | Re-trigger cascade keeps them in sync; final safety is squash-merge conflict on `CHANGELOG.md` | Serialized — only one release PR is open at a time |
+| **Diff visibility during code review** | Bump shows up inside each feature PR | Bump shows up only in the release PR |
+| **Reverting a release** | Revert the feature PR (single commit on main) | Revert the release PR's merge commit (chain of bot commits) |
+| **Adding the system to a new repo** | Copy 3 YAML files + 1 script; adjust the CHANGELOG format detection if non-standard | Copy 2 YAML files + `release.config.cjs`; install npm deps |
+
+### Recommendation criteria
+
+- If the team's main pain point is **"verified commits required by branch protection"**, Option 3 is the only one that works without extra signing infrastructure.
+- If the team values **a single rolling release PR for visibility** (so reviewers can see "what's about to ship" in one place), PR #173 fits better.
+- If **per-PR diff visibility** of the version bump matters during code review (it's right there in the feature PR), Option 3 wins.
+- If **operational simplicity** (fewer custom scripts to maintain) is the priority, PR #173 wins — semantic-release is well-trodden territory.
+- If **automation depth** matters (no manual trigger, no manual merge of a release PR), Option 3 is more end-to-end.
