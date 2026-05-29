@@ -1,0 +1,114 @@
+name: Bump version in PR
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: 'PR number to bump'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: bump-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve PR metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER_INPUT: ${{ github.event.pull_request.number || inputs.pr }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER_INPUT}" > /tmp/pr.json
+          head_ref=$(jq -r '.head.ref' /tmp/pr.json)
+          head_repo=$(jq -r '.head.repo.full_name // ""' /tmp/pr.json)
+          base_ref=$(jq -r '.base.ref' /tmp/pr.json)
+          title=$(jq -r '.title' /tmp/pr.json)
+          body=$(jq -r '.body // ""' /tmp/pr.json)
+          {
+            echo "PR_NUMBER=$PR_NUMBER_INPUT"
+            echo "PR_HEAD_REF=$head_ref"
+            echo "PR_HEAD_REPO=$head_repo"
+            echo "PR_BASE_REF=$base_ref"
+            echo "PR_TITLE<<EOF_TITLE"
+            echo "$title"
+            echo "EOF_TITLE"
+            echo "PR_BODY<<EOF_BODY"
+            echo "$body"
+            echo "EOF_BODY"
+          } >> "$GITHUB_ENV"
+          echo "Resolved PR #$PR_NUMBER_INPUT: head=$head_repo@$head_ref base=$base_ref"
+
+      - name: Skip if PR does not target main
+        id: gate_base
+        run: |
+          if [ "$PR_BASE_REF" != "main" ]; then
+            echo "PR targets $PR_BASE_REF (not main) — skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if PR is from a fork
+        if: steps.gate_base.outputs.skip != 'true'
+        id: gate_fork
+        run: |
+          if [ "$PR_HEAD_REPO" != "$GITHUB_REPOSITORY" ]; then
+            echo "PR is from a fork ($PR_HEAD_REPO) — skipping (cannot push to fork branches)."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout main (trusted script source)
+        if: steps.gate_base.outputs.skip != 'true' && steps.gate_fork.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      - name: Checkout PR head (file write target)
+        if: steps.gate_base.outputs.skip != 'true' && steps.gate_fork.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PR_HEAD_REF }}
+          path: pr
+          token: ${{ github.token }}
+
+      - name: Fetch commit messages for breaking-change detection
+        if: steps.gate_base.outputs.skip != 'true' && steps.gate_fork.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/commits" --paginate \
+            | jq -r '.[].commit.message' > /tmp/commit-messages.txt
+          {
+            echo "COMMIT_FOOTERS<<EOF_COMMITS"
+            cat /tmp/commit-messages.txt
+            echo "EOF_COMMITS"
+          } >> "$GITHUB_ENV"
+
+      - name: Compute and apply version bump
+        if: steps.gate_base.outputs.skip != 'true' && steps.gate_fork.outputs.skip != 'true'
+        id: compute
+        env:
+          MAIN_DIR: ${{ github.workspace }}/main
+          PR_DIR: ${{ github.workspace }}/pr
+        run: node main/.github/scripts/compute_release.cjs
+
+      - name: Commit and push bump
+        if: steps.compute.outputs.changed == 'true'
+        working-directory: pr
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json plugin.xml CHANGELOG.md
+          git commit -m "chore(release): prepare ${{ steps.compute.outputs.version }}"
+          git push origin "HEAD:${PR_HEAD_REF}"
