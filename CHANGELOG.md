@@ -6,7 +6,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
-## 1.2.5
+## 1.2.16
+
+### Chores
+
+- chore(android): update stripe dependency to 20.53.0 (#62)
+
+## 1.2.15
+
+### Fixes
+
+- (iOS) Correct hook to work on Cordova iOS 8 (https://outsystemsrd.atlassian.net/browse/RMET-5120)
+
+## 1.2.14
+
+### Chores
+
+- (android) remove unecessary dependency to `oscore` and `oscordova` on Android (https://outsystemsrd.atlassian.net/browse/RMET-4900)
+
+## 1.2.13
+
+### Chores
+
+- (ios) remove unecessary dependency to OSCommonPluginLib on iOS (https://outsystemsrd.atlassian.net/browse/RMET-4899)
+
+## 1.2.12
+
+### Fixes
+
+- Align handling of optional payment config properties in Cordova / Capacitor hooks. Fixes build error for iOS when missing properties like `payment_supported_card_countries`.
+
+## 1.2.11
+
+### Fixes
+- (android) Fixes missing strings.xml on target project (https://outsystemsrd.atlassian.net/browse/RMET-4779)
+- (android) include all directory possibilities for json-config/PaymentsPluginConfiguration.json config file (https://outsystemsrd.atlassian.net/browse/RMET-4779)
+- (ios) include all directory possibilities for json-config/PaymentsPluginConfiguration.json config file (https://outsystemsrd.atlassian.net/browse/RMET-4779)
+
+## 1.2.10
+
+### Fixes
+- (android) Removes the `kotlin-kapt` plugin that was being added, fixing builds for Capacitor apps (https://outsystemsrd.atlassian.net/browse/RMET-4515)
+
+## 1.2.9
+
+### Fixes
+- (android,ios) Add fix to `iOSCopyPreferences.js` hook to correctly locate `PaymentsPluginConfiguration.json` on MOCA builds. (https://outsystemsrd.atlassian.net/browse/RMET-4469)
+
+## 1.2.8
+
+### Fixes
+- (android) Migrate back button navigation while payment is being processed by updating dependency to `OSPaymentsLib-Android` (https://outsystemsrd.atlassian.net/browse/RMET-4338)
+
+## 1.2.7
+
+### Features
+- (android) Updates hooks to avoid duplicates in `strings.xml` (https://outsystemsrd.atlassian.net/browse/RMET-4025).
+
+## 1.2.6
 
 ### Fixes
 - (android) Add missing Gson gradle dependency
