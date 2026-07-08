@@ -6,11 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
-## 1.2.16
+## 1.2.17
 
 ### Chores
 
 - chore(android): update stripe dependency to 20.53.0 (#62)
+
+## 1.2.16
+
+### Chores
+
+- chore: update dependency to OSPaymentsLib-Android (#77)
 
 ## 1.2.15
 
