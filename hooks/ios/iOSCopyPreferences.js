@@ -27,12 +27,13 @@ module.exports = function (context) {
     let platformPath = path.join(projectRoot, "platforms/ios");
     // Cordova iOS 8 uses 'App' as the fixed project folder;
     //  earlier versions used the app name
-    if (fs.existsSync(path.join(platformPath, 'App'))) {
+    const isCordovaIos8OrHigher = fs.existsSync(path.join(platformPath, 'App'));
+    if (isCordovaIos8OrHigher) {
         appName = 'App';
     }
 
     // first we look for the platforms/ios/<AppName>/Resources directory
-    let resourcesPath = fs.existsSync(platformPath, appName, "Resources/json-config")
+    let resourcesPath = fs.existsSync(path.join(platformPath, appName, "Resources/json-config"))
         ? path.join(platformPath, appName, "Resources")
         : path.join(platformPath, "www")
 
@@ -131,7 +132,10 @@ module.exports = function (context) {
     
 
     //Change info.plist
-    let infoPlistPath = path.join(platformPath, appName + '/'+ appName +'-info.plist');
+    // Cordova always names the generated file '<name>-Info.plist' (capital I), on every
+    //  version — the previous lowercase 'i' only ever worked by accident on case-insensitive
+    //  filesystems. `appName` above is already resolved to 'App' (8+) or the real app name (<8).
+    let infoPlistPath = path.join(platformPath, appName, appName + '-Info.plist');
     let infoPlistFile = fs.readFileSync(infoPlistPath, 'utf8');
     let infoPlist = plist.parse(infoPlistFile);
 
