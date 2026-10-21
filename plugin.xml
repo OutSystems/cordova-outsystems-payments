@@ -26,6 +26,7 @@
 
     <source-file src="src/android/com/outsystems/payments/OSPayments.kt" target-dir="app/src/main/kotlin/com/outsystems/payments"/>
     <framework src="src/android/com/outsystems/payments/build.gradle" custom="true" type="gradleReference" />
+    <resource-file src="src/android/res/raw/outsystems_payments_keep.xml" target="res/raw/outsystems_payments_keep.xml" />
 
   </platform>
 
