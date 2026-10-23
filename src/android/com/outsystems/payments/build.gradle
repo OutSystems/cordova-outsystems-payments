@@ -37,3 +37,14 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3'
 }
+
+// Cordova apps only get this file, so it writes its own R8 rules where clean won't remove them.
+// Stripe and its dependencies reference classes that aren't in the app.
+def r8Rules = new File(rootDir, '.gradle/outsystems-payments-rules.pro')
+r8Rules.parentFile.mkdirs()
+r8Rules.text = '''-dontwarn com.stripe.android.financialconnections.**
+-dontwarn com.stripe.android.stripecardscan.**
+-dontwarn javax.naming.**
+-dontwarn com.google.errorprone.annotations.**
+'''
+android.buildTypes.release.proguardFile(r8Rules)

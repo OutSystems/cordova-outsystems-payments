@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The changes documented here do not include those from the original repository.
 
+## 1.2.18
+
+### Fixes
+
+- fix(android): add the R8 rules Stripe needs (#80)
+
 ## 1.2.17
 
 ### Chores
