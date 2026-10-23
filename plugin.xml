@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<plugin id="com.outsystems.payments" version="1.2.18" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="com.outsystems.payments" version="1.2.19" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
   <name>OSPayments</name>
   <description>OutSystems-owned plugin for mobile payments</description>
   <author>OutSystems Inc</author>
@@ -26,6 +26,7 @@
 
     <source-file src="src/android/com/outsystems/payments/OSPayments.kt" target-dir="app/src/main/kotlin/com/outsystems/payments"/>
     <framework src="src/android/com/outsystems/payments/build.gradle" custom="true" type="gradleReference" />
+    <resource-file src="src/android/res/raw/outsystems_payments_keep.xml" target="res/raw/outsystems_payments_keep.xml" />
 
   </platform>
 
